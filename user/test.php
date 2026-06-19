@@ -81,7 +81,12 @@ vpy_panel_head($bilet_id ? sprintf('%s %02d', t('ticket_label'), $bilet_id) : t(
 .q-card{background:var(--glass-strong);backdrop-filter:blur(30px);border:1px solid var(--border);border-radius:var(--r-lg);padding:36px;box-shadow:var(--shadow-sm);transition:opacity 0.3s,transform 0.3s}
 .q-num{font-family:var(--serif);font-size:0.9rem;font-weight:600;color:var(--primary);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:14px}
 .q-text{font-family:var(--serif);font-size:clamp(1.2rem,2vw,1.5rem);font-weight:500;line-height:1.4;color:var(--dark);margin-bottom:30px;letter-spacing:-0.01em}
-.q-image{margin-bottom:24px;border-radius:var(--r);overflow:hidden;background:#fff;border:1px solid var(--border);max-height:240px;display:grid;place-items:center;color:var(--muted);padding:30px}
+.q-image{margin-bottom:24px;border-radius:var(--r);overflow:hidden;background:linear-gradient(135deg,#FFFDF9,#F0EBE2);border:1px solid var(--border);max-height:340px;display:grid;place-items:center;padding:24px;position:relative}
+.q-image img{max-width:100%;max-height:300px;object-fit:contain;border-radius:12px;display:block}
+.q-image.is-logo{padding:40px;background:linear-gradient(135deg,rgba(13,107,78,0.06),rgba(232,168,56,0.04))}
+.q-image.is-logo img{max-height:120px;opacity:0.65;filter:grayscale(0.15)}
+.q-image.is-logo::after{content:attr(data-label);position:absolute;bottom:14px;left:50%;transform:translateX(-50%);font-size:0.74rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);font-weight:600;background:rgba(255,253,249,0.92);padding:4px 12px;border-radius:var(--pill);backdrop-filter:blur(6px)}
+@media (min-width:1280px){.q-image{max-height:400px;padding:32px}.q-image img{max-height:360px}.q-image.is-logo img{max-height:140px}}
 .q-answers{display:flex;flex-direction:column;gap:12px}
 .q-answer{display:flex;align-items:center;gap:16px;padding:18px 22px;background:rgba(255,253,249,0.6);border:1.5px solid var(--border);border-radius:var(--r);font-size:0.97rem;cursor:pointer;transition:var(--t);text-align:left;width:100%;color:var(--dark)}
 .q-answer:hover{background:var(--light);border-color:var(--primary);transform:translateX(4px)}
@@ -143,9 +148,13 @@ vpy_panel_sidebar('test', false);
                 <div class="q-card" data-q-index="<?= $i ?>" data-q-id="<?= (int)$q['id'] ?>" style="<?= $i === 0 ? '' : 'display:none' ?>">
                     <div class="q-num"><?= e(t('test_question')) ?> <?= $i + 1 ?></div>
                     <h2 class="q-text"><?= e($svol) ?></h2>
-                    <?php if (!empty($q['rasm'])): ?>
-                        <div class="q-image"><svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
-                    <?php endif; ?>
+                    <?php
+                    $rasm = $q['rasm'] ?? '';
+                    $has_image = $rasm && is_file(VPY_ROOT . $rasm);
+                    ?>
+                    <div class="q-image <?= $has_image ? '' : 'is-logo' ?>" data-label="Savol rasmi yo'q · logo">
+                        <img src="<?= e($has_image ? $rasm : vpy_logo_url()) ?>" alt="<?= $has_image ? 'Savol rasmi' : 'Logo' ?>" loading="lazy">
+                    </div>
                     <div class="q-answers">
                         <?php foreach ($variants as $v): ?>
                             <button type="button" class="q-answer" data-letter="<?= e($v[0]) ?>">
