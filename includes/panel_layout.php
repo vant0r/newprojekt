@@ -149,6 +149,114 @@ table.tbl tbody tr:last-child td{border-bottom:none}
     table.tbl thead th,table.tbl tbody td{padding:10px 12px}
 }
 
+/* DESKTOP TAKOMILLASHTIRISH — 1280px+ */
+@media (min-width:1280px){
+    .layout{grid-template-columns:296px 1fr}
+    .sidebar{padding:32px 22px}
+    .s-link{padding:13px 16px;font-size:0.94rem}
+    .s-link svg{width:19px;height:19px}
+    .main{padding:36px 44px;max-width:1480px}
+    .topbar{margin-bottom:34px;gap:24px}
+    .tb-title h1{font-size:2rem}
+    .card{padding:32px}
+    .card-head{margin-bottom:24px}
+    .card-head h2{font-size:1.5rem}
+    .field-row{gap:18px}
+    table.tbl{font-size:0.94rem}
+    table.tbl thead th{padding:16px 18px;font-size:0.8rem}
+    table.tbl tbody td{padding:16px 18px}
+    .row-actions a,.row-actions button{width:36px;height:36px;border-radius:11px}
+    .row-actions svg{width:15px;height:15px}
+    .btn{padding:12px 22px}
+    .btn-sm{padding:9px 16px}
+}
+
+/* WIDE DESKTOP — 1440px+ */
+@media (min-width:1440px){
+    .layout{grid-template-columns:312px 1fr}
+    .sidebar{padding:36px 24px}
+    .s-brand{font-size:1.18rem;padding:10px 14px 26px}
+    .s-logo{width:42px;height:42px}
+    .s-logo svg{width:22px;height:22px}
+    .s-section{padding:18px 14px 8px}
+    .s-link{padding:14px 18px;font-size:0.96rem;border-radius:15px}
+    .s-link svg{width:20px;height:20px}
+    .main{padding:44px 56px;max-width:1640px;font-size:15.5px}
+    .topbar{margin-bottom:40px}
+    .tb-title h1{font-size:2.2rem}
+    .tb-title p{font-size:0.96rem}
+    .card{padding:36px;border-radius:34px}
+    .card-head h2{font-size:1.6rem}
+    .field input,.field textarea,.field select{padding:14px 20px;font-size:0.97rem;border-radius:15px}
+    table.tbl{font-size:0.95rem}
+    table.tbl thead th{padding:18px 20px}
+    table.tbl tbody td{padding:18px 20px}
+}
+
+/* ULTRA WIDE — 1920px+ */
+@media (min-width:1920px){
+    .layout{grid-template-columns:340px 1fr}
+    .sidebar{padding:44px 26px}
+    .main{padding:54px 80px;max-width:1820px;margin:0 auto}
+    .tb-title h1{font-size:2.4rem}
+    .card{padding:42px;border-radius:38px}
+}
+
+/* DESKTOP YORDAMCHI GRIDLAR */
+@media (min-width:1280px){
+    .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:22px}
+    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+    .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
+    .grid-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+    .grid-split{display:grid;grid-template-columns:1.5fr 1fr;gap:24px}
+    .grid-sidebar-left{display:grid;grid-template-columns:340px 1fr;gap:24px}
+    .table-wrap{overflow-x:visible}
+    .toolbar{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+    .toolbar input,.toolbar select{padding:13px 18px;border-radius:14px;border:1px solid var(--border-strong);background:rgba(255,253,249,0.85)}
+    .toolbar input{flex:1;min-width:280px}
+}
+@media (min-width:1440px){
+    .grid-stats{gap:24px}
+    .grid-split{grid-template-columns:1.6fr 1fr;gap:30px}
+}
+
+/* DESKTOP STICKY BARS */
+@media (min-width:1280px){
+    .topbar.sticky-top{position:sticky;top:18px;z-index:10;backdrop-filter:blur(20px);background:rgba(250,247,242,0.86);border-radius:18px;padding:14px 20px;margin:-14px -20px 30px -20px;border:1px solid var(--border)}
+    .card.tall{min-height:420px}
+}
+
+/* CHIP/BADGE TAKOMILI */
+@media (min-width:1280px){
+    .chip{padding:6px 14px;font-size:0.78rem}
+}
+
+/* SIDEBAR HOVER STATE — desktop only */
+@media (min-width:1024px) and (hover:hover){
+    .s-link:not(.active):hover{padding-left:18px}
+    .s-link svg{transition:var(--t)}
+    .s-link:hover svg{transform:translateX(2px)}
+}
+
+/* DARK SCROLLBAR */
+@media (min-width:1024px){
+    .sidebar::-webkit-scrollbar{width:6px}
+    .sidebar::-webkit-scrollbar-thumb{background:rgba(13,107,78,0.18);border-radius:6px}
+    .sidebar::-webkit-scrollbar-thumb:hover{background:rgba(13,107,78,0.32)}
+    .sidebar::-webkit-scrollbar-track{background:transparent}
+    .main::-webkit-scrollbar{width:8px}
+    .main::-webkit-scrollbar-thumb{background:rgba(180,160,130,0.3);border-radius:8px}
+    .main::-webkit-scrollbar-track{background:transparent}
+}
+
+/* PRINT */
+@media print{
+    .sidebar,.topbar,.row-actions,.btn,.burger-mobile,.bg-mesh,body::before{display:none!important}
+    .main{padding:0;max-width:none}
+    .card{box-shadow:none;border:1px solid #ccc;break-inside:avoid;page-break-inside:avoid;background:#fff}
+    table.tbl{font-size:11px}
+}
+
 @keyframes spin{to{transform:rotate(360deg)}}
 .spinner{width:20px;height:20px;border:2px solid rgba(13,107,78,0.2);border-top-color:var(--primary);border-radius:50%;animation:spin 0.8s linear infinite}
 CSS;
@@ -163,7 +271,7 @@ function vpy_panel_head($title, $extra_css = '') {
     echo '<meta name="theme-color" content="#0D6B4E">';
     echo '<meta name="robots" content="noindex">';
     echo '<title>' . e($title) . ' — ' . e(t('site_name')) . '</title>';
-    echo '<link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">';
+    echo '<link rel="icon" type="image/svg+xml" href="' . e(vpy_favicon_url()) . '">';
     echo '<link rel="manifest" href="/manifest.json">';
     echo '<link rel="preconnect" href="https://fonts.googleapis.com">';
     echo '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>';

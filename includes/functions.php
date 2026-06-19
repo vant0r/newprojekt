@@ -263,3 +263,104 @@ function vpy_phone_normalize($p) {
     if (strlen($p) === 13 && strpos($p, '998') === 0) return '+' . substr($p, 1);
     return '+' . $p;
 }
+
+
+
+/* ============================================================
+ * FAYL YUKLASH HELPERLARI
+ * ============================================================ */
+
+function vpy_upload_image($field_name, $subfolder = '', $max_kb = 2048) {
+    if (empty($_FILES[$field_name]) || ($_FILES[$field_name]['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_NO_FILE) {
+        return ['ok' => false, 'reason' => 'no_file'];
+    }
+    $f = $_FILES[$field_name];
+    if ($f['error'] !== UPLOAD_ERR_OK) {
+        return ['ok' => false, 'reason' => 'upload_error', 'code' => $f['error']];
+    }
+    if ($f['size'] > $max_kb * 1024) {
+        return ['ok' => false, 'reason' => 'too_big', 'limit_kb' => $max_kb];
+    }
+    $allowed_mimes = [
+        'image/jpeg' => 'jpg',
+        'image/png' => 'png',
+        'image/webp' => 'webp',
+        'image/gif' => 'gif',
+        'image/svg+xml' => 'svg',
+    ];
+    $mime = function_exists('mime_content_type') ? mime_content_type($f['tmp_name']) : ($f['type'] ?? '');
+    if ($mime === 'image/svg' || $mime === 'text/xml' || $mime === 'application/xml') $mime = 'image/svg+xml';
+    if (!isset($allowed_mimes[$mime])) {
+        return ['ok' => false, 'reason' => 'bad_mime', 'mime' => $mime];
+    }
+    $ext = $allowed_mimes[$mime];
+
+    if ($mime === 'image/svg+xml') {
+        $svg_content = @file_get_contents($f['tmp_name']);
+        if ($svg_content !== false && preg_match('/<\s*script|on\w+\s*=|javascript:/i', $svg_content)) {
+            return ['ok' => false, 'reason' => 'unsafe_svg'];
+        }
+    }
+
+    $folder = VPY_UPLOADS;
+    if ($subfolder !== '') {
+        $subfolder = preg_replace('/[^a-z0-9_\-]/i', '', $subfolder);
+        $folder .= '/' . $subfolder;
+    }
+    if (!is_dir($folder)) {
+        if (!@mkdir($folder, 0775, true) && !is_dir($folder)) {
+            return ['ok' => false, 'reason' => 'no_folder'];
+        }
+    }
+    $filename = bin2hex(random_bytes(8)) . '_' . date('Ymd_His') . '.' . $ext;
+    $target = $folder . '/' . $filename;
+
+    if (!@move_uploaded_file($f['tmp_name'], $target)) {
+        return ['ok' => false, 'reason' => 'move_failed'];
+    }
+    @chmod($target, 0644);
+
+    $rel = '/assets/uploads/' . ($subfolder ? $subfolder . '/' : '') . $filename;
+    return ['ok' => true, 'path' => $rel, 'absolute' => $target, 'size' => $f['size'], 'mime' => $mime];
+}
+
+function vpy_delete_upload($rel_path) {
+    if (!$rel_path || strpos($rel_path, '/assets/uploads/') !== 0) return false;
+    $full = VPY_ROOT . $rel_path;
+    if (is_file($full)) {
+        return @unlink($full);
+    }
+    return false;
+}
+
+function vpy_logo_url() {
+    $custom = vpy_setting('site_logo', '');
+    if ($custom && is_file(VPY_ROOT . $custom)) return $custom;
+    return '/assets/images/logo.svg';
+}
+
+function vpy_favicon_url() {
+    $custom = vpy_setting('site_favicon', '');
+    if ($custom && is_file(VPY_ROOT . $custom)) return $custom;
+    return '/assets/images/favicon.svg';
+}
+
+function vpy_image_with_fallback($image_path, $alt = '', $css_class = '') {
+    if ($image_path && is_file(VPY_ROOT . $image_path)) {
+        return '<img src="' . e($image_path) . '" alt="' . e($alt) . '" class="' . e($css_class) . '" loading="lazy">';
+    }
+    $logo = vpy_logo_url();
+    return '<img src="' . e($logo) . '" alt="' . e($alt ?: 'logo') . '" class="' . e($css_class) . ' is-logo-fallback" loading="lazy">';
+}
+
+function vpy_human_filesize($bytes, $decimals = 1) {
+    $size = ['B', 'KB', 'MB', 'GB'];
+    $factor = floor((strlen((string)$bytes) - 1) / 3);
+    return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . ' ' . $size[$factor];
+}
+
+function vpy_upload_max_size_bytes() {
+    $php_ini = (int)(ini_get('upload_max_filesize') ?: '2M');
+    $post_ini = (int)(ini_get('post_max_size') ?: '8M');
+    return min($php_ini, $post_ini) * 1024 * 1024;
+}
