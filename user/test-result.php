@@ -59,6 +59,8 @@ vpy_panel_head(t('test_result_title'), <<<CSS
 .review-card.correct{border-left:4px solid var(--primary)}
 .review-card.wrong{border-left:4px solid #C73E36}
 .review-q{font-family:var(--serif);font-size:1.05rem;font-weight:500;line-height:1.4;margin-bottom:14px;color:var(--dark)}
+.review-image{margin:14px 0;border-radius:var(--r-sm);overflow:hidden;background:#fff;border:1px solid var(--border);max-height:280px;display:grid;place-items:center;padding:16px}
+.review-image img{max-width:100%;max-height:240px;object-fit:contain;border-radius:8px}
 .review-meta{display:flex;align-items:center;gap:14px;font-size:0.82rem;color:var(--muted);margin-bottom:14px;flex-wrap:wrap}
 .review-meta .chip{padding:4px 10px;border-radius:var(--pill);font-weight:600;font-size:0.72rem}
 .review-meta .chip.correct{background:rgba(13,107,78,0.1);color:var(--primary-dark)}
@@ -128,6 +130,15 @@ vpy_panel_sidebar('natijalar', false);
             <?php endif; ?>
         </div>
         <div class="review-q"><?= e($svol) ?></div>
+        <?php
+        $rasm = $q['rasm'] ?? '';
+        $has_image = $rasm && is_file(VPY_ROOT . $rasm);
+        if ($has_image):
+        ?>
+            <div class="review-image">
+                <img src="<?= e($rasm) ?>" alt="Savol rasmi" loading="lazy">
+            </div>
+        <?php endif; ?>
         <?php if ($izoh): ?>
             <div class="review-explain"><strong><?= e(t('test_explain')) ?>:</strong> <?= e($izoh) ?></div>
         <?php endif; ?>

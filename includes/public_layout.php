@@ -113,6 +113,9 @@ section{padding:80px 0;position:relative}
 
 @media (max-width:1024px){.nav-links,.btn-nav{display:none}.burger{display:flex}.footer-grid{grid-template-columns:1fr 1fr;gap:40px}}
 @media (max-width:768px){section{padding:60px 0}.page-hero{padding:130px 0 50px}.footer-grid{grid-template-columns:1fr}.footer{padding:60px 0 30px}.container{width:calc(100% - 32px)}}
+@media (min-width:1280px){body{font-size:16px}.h-display{font-size:clamp(2.6rem,4.6vw,4.8rem)}.h-section{font-size:clamp(2rem,3.4vw,3rem)}.lead{font-size:1.12rem}}
+@media (min-width:1440px){.container{width:min(1380px,90vw)}body{font-size:16.5px}.page-hero{padding:170px 0 80px}}
+@media (min-width:1920px){.container{width:min(1480px,80vw)}body{font-size:17px}}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms!important;transition-duration:0.01ms!important}}
 CSS;
 }
@@ -126,7 +129,7 @@ function vpy_public_head($title, $description = '', $extra_css = '') {
     echo '<meta name="theme-color" content="#0D6B4E">';
     echo '<meta name="description" content="' . e($description ?: vpy_setting('site_description')) . '">';
     echo '<title>' . e($title) . ' — ' . e(t('site_name')) . '</title>';
-    echo '<link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">';
+    echo '<link rel="icon" type="image/svg+xml" href="' . e(vpy_favicon_url()) . '">';
     echo '<link rel="manifest" href="/manifest.json">';
     echo '<link rel="preconnect" href="https://fonts.googleapis.com">';
     echo '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>';
