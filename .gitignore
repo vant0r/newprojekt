@@ -1,6 +1,10 @@
 # Yuklangan fayllar (foydalanuvchilarning rasmlari, hujjatlari)
 assets/uploads/*
 !assets/uploads/.gitkeep
+!assets/uploads/branding
+!assets/uploads/branding/.gitkeep
+!assets/uploads/savollar
+!assets/uploads/savollar/.gitkeep
 
 # Server uchun maxsus fayllar
 .htaccess
