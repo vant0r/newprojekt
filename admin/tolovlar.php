@@ -38,7 +38,12 @@ $pag = vpy_paginate($payments, 25, $page);
 
 $total_amount = array_sum(array_column(array_filter($payments, fn($p) => ($p['status'] ?? '') === 'success'), 'amount'));
 
-vpy_panel_head(t('admin_payments'));
+vpy_panel_head(t('admin_payments'), <<<CSS
+.ss-thumb{display:block;width:54px;height:42px;border-radius:8px;overflow:hidden;background:#fff;border:1px solid var(--border);transition:var(--t)}
+.ss-thumb:hover{transform:scale(1.05);border-color:var(--primary)}
+.ss-thumb img{width:100%;height:100%;object-fit:cover}
+@media (min-width:1280px){.ss-thumb{width:64px;height:48px}}
+CSS);
 vpy_panel_sidebar('tolovlar', true);
 ?>
 <main class="main">
@@ -57,12 +62,13 @@ vpy_panel_sidebar('tolovlar', true);
     <?php else: ?>
     <div style="overflow-x:auto">
         <table class="tbl">
-            <thead><tr><th>#</th><th>Foydalanuvchi</th><th>Tarif</th><th>Summa</th><th>Usul</th><th>Status</th><th>Sana</th><th></th></tr></thead>
+            <thead><tr><th>#</th><th>Foydalanuvchi</th><th>Tarif</th><th>Summa</th><th>Usul</th><th>Status</th><th>Screenshot</th><th>Sana</th><th></th></tr></thead>
             <tbody>
                 <?php foreach ($pag['items'] as $p):
                     $usr = vpy_find('users', 'id', $p['user_id']);
                     $st = $p['status'];
                     $chip = $st === 'success' ? 'success' : ($st === 'pending' ? 'warning' : 'danger');
+                    $has_ss = !empty($p['screenshot']) && is_file(VPY_ROOT . $p['screenshot']);
                 ?>
                 <tr>
                     <td><strong>#<?= e($p['invoice_number']) ?></strong></td>
@@ -71,6 +77,13 @@ vpy_panel_sidebar('tolovlar', true);
                     <td><strong style="font-family:var(--serif);font-size:1.05rem;color:var(--primary)"><?= number_format((float)$p['amount'], 0, '.', ' ') ?></strong></td>
                     <td><span class="chip chip-muted"><?= e(strtoupper($p['method'])) ?></span></td>
                     <td><span class="chip chip-<?= $chip ?>"><?= e($st) ?></span></td>
+                    <td>
+                        <?php if ($has_ss): ?>
+                            <a href="<?= e($p['screenshot']) ?>" target="_blank" class="ss-thumb" title="To'lov screenshoti"><img src="<?= e($p['screenshot']) ?>" alt=""></a>
+                        <?php else: ?>
+                            <span class="chip chip-muted" style="font-size:0.7rem">—</span>
+                        <?php endif; ?>
+                    </td>
                     <td><?= e(vpy_date($p['created_at'], 'd.m.Y H:i')) ?></td>
                     <td>
                         <div class="row-actions">

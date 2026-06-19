@@ -18,9 +18,15 @@ function vpy_panel_css() {
     --serif:"Playfair Display",Georgia,serif;
     --sans:"Manrope","Inter",-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
 }
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none}
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
-body{font-family:var(--sans);font-size:15px;line-height:1.55;color:var(--dark);background:var(--bg);min-height:100vh;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body{font-family:var(--sans);font-size:15px;line-height:1.55;color:var(--dark);background:var(--bg);min-height:100vh;-webkit-font-smoothing:antialiased;overflow-x:hidden;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+button,a,input,textarea,select,label,.btn,.s-link,.nav-link,.chip,.tab{-webkit-tap-highlight-color:transparent;outline:0}
+button:focus,a:focus,input:focus,textarea:focus,select:focus{outline:0}
+button:focus-visible,a:focus-visible{outline:2px solid var(--primary);outline-offset:2px;border-radius:8px}
+input:focus-visible,textarea:focus-visible,select:focus-visible{outline:0}
+button,.btn{user-select:none;-webkit-user-select:none}
+::selection{background:rgba(13,107,78,0.18);color:var(--dark)}
 body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;opacity:0.25;mix-blend-mode:multiply;background-image:url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/><feColorMatrix values='0 0 0 0 0.12 0 0 0 0 0.10 0 0 0 0 0.08 0 0 0 0.4 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/></svg>")}
 .bg-mesh{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
 .blob{position:absolute;border-radius:50%;filter:blur(90px);opacity:0.4}
@@ -142,11 +148,44 @@ table.tbl tbody tr:last-child td{border-bottom:none}
     .field-row{grid-template-columns:1fr}
 }
 @media (max-width:640px){
-    .main{padding:16px}
-    .card{padding:22px;border-radius:var(--r)}
-    .topbar{margin-bottom:20px}
-    table.tbl{font-size:0.82rem}
-    table.tbl thead th,table.tbl tbody td{padding:10px 12px}
+    .main{padding:14px 12px}
+    .card{padding:18px 16px;border-radius:18px}
+    .topbar{margin-bottom:16px;gap:10px}
+    .tb-title h1{font-size:1.3rem;letter-spacing:-0.015em}
+    .tb-title p{font-size:0.82rem}
+    .tb-actions{gap:6px;width:100%;justify-content:flex-end}
+    .btn{padding:9px 14px;font-size:0.82rem;border-radius:14px}
+    .btn svg{width:14px;height:14px}
+    .btn-sm{padding:7px 12px;font-size:0.76rem}
+    table.tbl{font-size:0.78rem}
+    table.tbl thead th,table.tbl tbody td{padding:8px 10px}
+    .row-actions a,.row-actions button{width:30px;height:30px;border-radius:9px}
+    .row-actions svg{width:13px;height:13px}
+    .field{margin-bottom:14px}
+    .field label{font-size:0.78rem;margin-bottom:6px}
+    .field input,.field textarea,.field select{padding:11px 14px;border-radius:12px;font-size:0.9rem}
+    .card-head h2{font-size:1.08rem}
+    .card-head{margin-bottom:14px;gap:8px}
+    .chip{padding:3px 9px;font-size:0.7rem}
+    .pagination{gap:4px}
+    .pagination a,.pagination span{min-width:32px;height:32px;font-size:0.78rem;padding:0 9px}
+    .flash{padding:10px 14px;font-size:0.82rem;gap:8px;border-radius:12px}
+    .user-btn{padding:5px 10px 5px 5px}
+    .user-avatar{width:28px;height:28px;font-size:0.7rem}
+    .user-name{font-size:0.78rem;max-width:80px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .topbar h1{font-size:1.25rem!important}
+}
+@media (max-width:380px){
+    .main{padding:12px 10px}
+    .card{padding:14px 12px;border-radius:16px}
+    .tb-title h1{font-size:1.18rem}
+    .btn{padding:8px 12px;font-size:0.78rem}
+    .field input,.field textarea{padding:10px 12px;font-size:0.88rem}
+    .user-name{display:none}
+    .row-actions{gap:4px}
+    .row-actions a,.row-actions button{width:28px;height:28px}
+    table.tbl{font-size:0.72rem}
+    table.tbl thead th,table.tbl tbody td{padding:7px 8px}
 }
 
 /* DESKTOP TAKOMILLASHTIRISH — 1280px+ */
@@ -370,6 +409,8 @@ function vpy_panel_topbar($title, $subtitle = '', $actions_html = '') {
 }
 
 function vpy_panel_foot() {
+    $storage_js = vpy_storage_js();
+    echo '<script>' . $storage_js . '</script>';
     echo <<<HTML
 <script>
 (function(){

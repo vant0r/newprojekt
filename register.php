@@ -50,8 +50,11 @@ $is_cyrl = $lang === 'uz_cyrillic';
     --serif:"Playfair Display",Georgia,serif;
     --sans:"Manrope","Inter",-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
 }
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{-webkit-text-size-adjust:100%}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+button,a,input,textarea,select,.btn{-webkit-tap-highlight-color:transparent;outline:0}
+button:focus,a:focus{outline:0}
+button:focus-visible,a:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
 body{font-family:var(--sans);font-size:16px;line-height:1.6;color:var(--dark);background:var(--bg);min-height:100vh;display:flex;overflow-x:hidden;position:relative;-webkit-font-smoothing:antialiased}
 body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;opacity:0.3;mix-blend-mode:multiply;background-image:url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/><feColorMatrix values='0 0 0 0 0.12 0 0 0 0 0.10 0 0 0 0 0.08 0 0 0 0.4 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/></svg>")}
 .bg-mesh{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}

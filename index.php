@@ -71,8 +71,8 @@ $page_desc = vpy_setting('site_description', t('footer_about'));
     --sans:"Manrope","Inter",-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
     --container:min(1320px,92vw);
 }
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;overflow-x:hidden}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;overflow-x:hidden;text-size-adjust:100%}
 body{
     font-family:var(--sans);
     font-weight:400;
@@ -86,6 +86,11 @@ body{
     -webkit-font-smoothing:antialiased;
     text-rendering:optimizeLegibility;
 }
+button,a,input,textarea,select,.btn,.nav-link,.faq-q,.tariff-card,.bento-cell{-webkit-tap-highlight-color:transparent;outline:0}
+button:focus,a:focus{outline:0}
+button:focus-visible,a:focus-visible{outline:2px solid var(--primary);outline-offset:3px;border-radius:8px}
+button,.btn{user-select:none;-webkit-user-select:none}
+::selection{background:rgba(13,107,78,0.18);color:var(--dark)}
 img,svg{max-width:100%;display:block;height:auto}
 a{color:inherit;text-decoration:none;transition:var(--t)}
 button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}

@@ -3,6 +3,40 @@ require_once __DIR__ . '/../includes/panel_layout.php';
 vpy_require_admin('/login.php');
 
 if (vpy_is_post() && vpy_csrf_check(vpy_post('csrf'))) {
+    /* AJAX — webhook actionlari */
+    $ajax_action = vpy_post('ajax_action');
+    if ($ajax_action) {
+        header('Content-Type: application/json; charset=utf-8');
+        require_once __DIR__ . '/../telegram/api.php';
+        $bot = new VpyTelegramApi();
+        if ($ajax_action === 'set_webhook') {
+            $domain = trim(vpy_post('domain') ?: VPY_DOMAIN);
+            $url = 'https://' . preg_replace('#^https?://#', '', $domain) . '/telegram/bot.php';
+            $resp = $bot->setWebhook($url);
+            echo json_encode(['ok' => !empty($resp['ok']), 'url' => $url, 'response' => $resp], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+        if ($ajax_action === 'check_webhook') {
+            $resp = $bot->call('getWebhookInfo');
+            echo json_encode(['ok' => !empty($resp['ok']), 'info' => $resp['result'] ?? $resp], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+        if ($ajax_action === 'delete_webhook') {
+            $resp = $bot->deleteWebhook();
+            echo json_encode(['ok' => !empty($resp['ok']), 'response' => $resp], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+        if ($ajax_action === 'test_message') {
+            $chat_id = trim(vpy_post('chat_id') ?: vpy_setting('telegram_chat_id'));
+            if (!$chat_id) { echo json_encode(['ok' => false, 'error' => 'chat_id_required']); exit; }
+            $resp = $bot->send($chat_id, "✅ <b>Test xabar</b>\n\nSayt: " . VPY_DOMAIN . "\nVaqt: " . date('Y-m-d H:i:s'));
+            echo json_encode(['ok' => !empty($resp['ok']), 'response' => $resp], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+        echo json_encode(['ok' => false, 'error' => 'unknown_action']);
+        exit;
+    }
+
     $settings = vpy_read_json('sozlamalar', []);
     $by_key = [];
     foreach ($settings as $i => $s) $by_key[$s['key']] = $i;
@@ -214,6 +248,141 @@ vpy_panel_sidebar('sozlamalar', true);
                 <button type="submit" class="btn btn-primary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg><?= e(t('btn_save')) ?></button>
             </div>
         </div>
+
+    <?php elseif ($current_tab === 'telegram'): ?>
+        <?php
+        $tg_token = $grouped['telegram']['telegram_bot_token'] ?? '';
+        $tg_chat = $grouped['telegram']['telegram_chat_id'] ?? '';
+        $tg_domain = $grouped['telegram']['telegram_domain'] ?? VPY_DOMAIN;
+        $webhook_url = 'https://' . preg_replace('#^https?://#', '', $tg_domain) . '/telegram/bot.php';
+        ?>
+        <div class="card">
+            <div class="card-head"><h2>Telegram bot sozlamalari</h2></div>
+            <div class="field">
+                <label>Bot token <span class="muted" style="font-weight:400;font-size:0.78rem">— <a href="https://t.me/BotFather" target="_blank" style="color:var(--primary)">@BotFather</a> dan oling</span></label>
+                <input type="password" name="telegram_bot_token" value="<?= e($tg_token) ?>" placeholder="123456789:ABCdef..." autocomplete="off">
+            </div>
+            <div class="field-row">
+                <div class="field">
+                    <label>Admin chat ID <span class="muted" style="font-weight:400;font-size:0.78rem">— bildirishnoma uchun</span></label>
+                    <input type="text" name="telegram_chat_id" value="<?= e($tg_chat) ?>" placeholder="123456789">
+                </div>
+                <div class="field">
+                    <label>Domen (webhook uchun)</label>
+                    <input type="text" name="telegram_domain" value="<?= e($tg_domain) ?>" placeholder="vatanparvaryaypan.uz">
+                </div>
+            </div>
+            <div style="display:flex;gap:10px;margin-top:14px">
+                <button type="submit" class="btn btn-primary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>Tokenni saqlash</button>
+            </div>
+        </div>
+
+        <div class="card" style="margin-top:18px">
+            <div class="card-head"><h2>Webhook</h2></div>
+            <div style="padding:14px 18px;background:rgba(13,107,78,0.04);border:1px solid var(--border);border-radius:14px;margin-bottom:18px">
+                <div style="font-size:0.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;font-weight:600;margin-bottom:6px">Webhook URL</div>
+                <code style="font-family:ui-monospace,monospace;font-size:0.92rem;color:var(--primary);word-break:break-all"><?= e($webhook_url) ?></code>
+            </div>
+
+            <div id="webhookStatus" style="display:none;padding:14px 18px;border-radius:14px;margin-bottom:18px;font-size:0.9rem;line-height:1.55"></div>
+
+            <div style="display:flex;gap:10px;flex-wrap:wrap">
+                <button type="button" class="btn btn-success" id="btnSetWebhook" <?= $tg_token ? '' : 'disabled' ?>>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>
+                    Webhook o'rnatish
+                </button>
+                <button type="button" class="btn btn-ghost" id="btnCheckWebhook" <?= $tg_token ? '' : 'disabled' ?>>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+                    Holatni tekshirish
+                </button>
+                <button type="button" class="btn btn-danger" id="btnDeleteWebhook" <?= $tg_token ? '' : 'disabled' ?>>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14a2 2 0 01-2 2H9a2 2 0 01-2-2L5 6"/></svg>
+                    Webhookni o'chirish
+                </button>
+            </div>
+
+            <?php if (!$tg_token): ?>
+            <div style="margin-top:18px;padding:12px 16px;background:rgba(232,168,56,0.08);border:1px solid rgba(232,168,56,0.25);border-radius:12px;font-size:0.85rem;color:#A87830">
+                Avval bot tokenini kiriting va saqlang, keyin webhook tugmalari faollashadi.
+            </div>
+            <?php endif; ?>
+        </div>
+
+        <div class="card" style="margin-top:18px">
+            <div class="card-head"><h2>Test xabar yuborish</h2></div>
+            <p class="muted" style="margin-bottom:14px;font-size:0.88rem">Botni sinab ko'rish uchun chat ID kiriting va xabar yuboring.</p>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+                <input type="text" id="testChatId" placeholder="Chat ID (admin chat ham mumkin)" value="<?= e($tg_chat) ?>" style="flex:1;min-width:240px;padding:13px 18px;border-radius:14px;border:1px solid var(--border-strong);background:rgba(255,253,249,0.85)">
+                <button type="button" class="btn btn-dark" id="btnTestMessage" <?= $tg_token ? '' : 'disabled' ?>>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                    Yuborish
+                </button>
+            </div>
+        </div>
+
+        <script>
+        (function(){
+            const csrf = '<?= e(vpy_csrf()) ?>';
+            const status = document.getElementById('webhookStatus');
+            function setStatus(type, html){
+                status.style.display = 'block';
+                status.style.background = type === 'ok' ? 'rgba(13,107,78,0.1)' : (type === 'err' ? 'rgba(255,96,88,0.1)' : 'rgba(232,168,56,0.1)');
+                status.style.borderLeft = '4px solid ' + (type === 'ok' ? 'var(--primary)' : (type === 'err' ? '#C73E36' : 'var(--accent)'));
+                status.style.color = type === 'ok' ? 'var(--primary-dark)' : (type === 'err' ? '#C73E36' : '#A87830');
+                status.innerHTML = html;
+            }
+            async function call(action, extra){
+                extra = extra || {};
+                setStatus('info', '<svg width="14" height="14" style="display:inline;vertical-align:-2px;animation:spin 1s linear infinite" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> Kutilmoqda...');
+                const fd = new FormData();
+                fd.append('csrf', csrf);
+                fd.append('ajax_action', action);
+                Object.keys(extra).forEach(k => fd.append(k, extra[k]));
+                try {
+                    const r = await fetch('/admin/sozlamalar.php?tab=telegram', {method:'POST', body:fd});
+                    const j = await r.json();
+                    return j;
+                } catch(e) {
+                    return {ok:false, error: e.message};
+                }
+            }
+            document.getElementById('btnSetWebhook')?.addEventListener('click', async function(){
+                const j = await call('set_webhook', {domain: '<?= e($tg_domain) ?>'});
+                if (j.ok) {
+                    setStatus('ok', '✅ <strong>Webhook muvaffaqiyatli o\'rnatildi</strong><br>URL: <code><?= e($webhook_url) ?></code><br>Endi botingiz xabarlarni qabul qiladi.');
+                } else {
+                    const desc = j.response?.description || j.error || 'Xato';
+                    setStatus('err', '❌ <strong>O\'rnatib bo\'lmadi:</strong> ' + desc);
+                }
+            });
+            document.getElementById('btnCheckWebhook')?.addEventListener('click', async function(){
+                const j = await call('check_webhook');
+                if (j.ok && j.info) {
+                    const i = j.info;
+                    let html = '<strong>Webhook holati:</strong><br>';
+                    html += '· URL: <code>' + (i.url || '(yo\'q)') + '</code><br>';
+                    html += '· Pending updates: ' + (i.pending_update_count || 0) + '<br>';
+                    if (i.last_error_message) html += '· Xato: ' + i.last_error_message;
+                    setStatus(i.url ? 'ok' : 'info', html);
+                } else {
+                    setStatus('err', '❌ Tekshirishda xato: ' + (j.error || JSON.stringify(j)));
+                }
+            });
+            document.getElementById('btnDeleteWebhook')?.addEventListener('click', async function(){
+                if (!confirm('Webhookni o\'chirib tashlaysizmi?')) return;
+                const j = await call('delete_webhook');
+                if (j.ok) setStatus('ok', '✅ Webhook o\'chirildi');
+                else setStatus('err', '❌ O\'chirib bo\'lmadi');
+            });
+            document.getElementById('btnTestMessage')?.addEventListener('click', async function(){
+                const chat_id = document.getElementById('testChatId').value.trim();
+                if (!chat_id) { alert('Chat ID kiriting'); return; }
+                const j = await call('test_message', {chat_id: chat_id});
+                if (j.ok) setStatus('ok', '✅ Test xabar yuborildi (chat ' + chat_id + ')');
+                else setStatus('err', '❌ Yuborib bo\'lmadi: ' + (j.response?.description || j.error || 'xato'));
+            });
+        })();
+        </script>
 
     <?php else: ?>
         <div class="card">

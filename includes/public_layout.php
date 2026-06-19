@@ -18,9 +18,15 @@ function vpy_public_css() {
     --sans:"Manrope","Inter",-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
     --container:min(1280px,92vw);
 }
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;overflow-x:hidden}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;overflow-x:hidden;text-size-adjust:100%}
 body{font-family:var(--sans);font-size:clamp(15px,1vw,16px);line-height:1.6;color:var(--dark);background:var(--bg);overflow-x:hidden;min-height:100vh;position:relative;-webkit-font-smoothing:antialiased}
+button,a,input,textarea,select,.btn,.nav-link,.chip{-webkit-tap-highlight-color:transparent;outline:0}
+button:focus,a:focus{outline:0}
+button:focus-visible,a:focus-visible{outline:2px solid var(--primary);outline-offset:2px;border-radius:8px}
+input:focus-visible,textarea:focus-visible,select:focus-visible{outline:0}
+button,.btn{user-select:none;-webkit-user-select:none}
+::selection{background:rgba(13,107,78,0.18);color:var(--dark)}
 body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;opacity:0.3;mix-blend-mode:multiply;background-image:url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/><feColorMatrix values='0 0 0 0 0.12 0 0 0 0 0.10 0 0 0 0 0.08 0 0 0 0.4 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/></svg>")}
 .mesh-bg{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
 .mesh-blob{position:absolute;border-radius:50%;filter:blur(80px);opacity:0.5}
@@ -113,6 +119,40 @@ section{padding:80px 0;position:relative}
 
 @media (max-width:1024px){.nav-links,.btn-nav{display:none}.burger{display:flex}.footer-grid{grid-template-columns:1fr 1fr;gap:40px}}
 @media (max-width:768px){section{padding:60px 0}.page-hero{padding:130px 0 50px}.footer-grid{grid-template-columns:1fr}.footer{padding:60px 0 30px}.container{width:calc(100% - 32px)}}
+@media (max-width:480px){
+    section{padding:48px 0}
+    .page-hero{padding:110px 0 36px}
+    .container{width:calc(100% - 24px)}
+    body{font-size:14px}
+    .h-display{font-size:clamp(1.7rem,8.5vw,2.6rem)}
+    .h-section{font-size:clamp(1.5rem,6.5vw,2.1rem)}
+    .lead{font-size:0.92rem;line-height:1.5}
+    .btn{padding:13px 22px;font-size:0.86rem;border-radius:80px}
+    .btn svg{width:14px;height:14px}
+    .eyebrow{padding:6px 14px;font-size:0.72rem;letter-spacing:0.04em}
+    .navbar{top:10px;width:calc(100% - 20px)}
+    .nav-inner{padding:8px 8px 8px 14px;border-radius:80px}
+    .nav-brand{font-size:1rem;gap:8px}
+    .nav-logo{width:32px;height:32px;border-radius:10px}
+    .nav-logo svg{width:17px;height:17px}
+    .footer{padding:48px 0 24px}
+    .footer-grid{gap:28px;margin-bottom:36px}
+    .footer-brand{font-size:1.1rem}
+    .footer-about{font-size:0.85rem}
+    .footer-col h4{font-size:0.78rem;margin-bottom:14px}
+    .footer-col a,.footer-contact-line{font-size:0.85rem}
+    .footer-bottom{font-size:0.74rem;gap:10px;padding-top:20px}
+}
+@media (max-width:380px){
+    .container{width:calc(100% - 20px)}
+    .h-display{font-size:clamp(1.55rem,9vw,2.3rem)}
+    .h-section{font-size:clamp(1.4rem,7vw,1.9rem)}
+    .lead{font-size:0.88rem}
+    .btn{padding:12px 18px;font-size:0.82rem}
+    .nav-brand{font-size:0.92rem}
+    .navbar{top:8px;width:calc(100% - 16px)}
+    .nav-inner{padding:6px 6px 6px 12px}
+}
 @media (min-width:1280px){body{font-size:16px}.h-display{font-size:clamp(2.6rem,4.6vw,4.8rem)}.h-section{font-size:clamp(2rem,3.4vw,3rem)}.lead{font-size:1.12rem}}
 @media (min-width:1440px){.container{width:min(1380px,90vw)}body{font-size:16.5px}.page-hero{padding:170px 0 80px}}
 @media (min-width:1920px){.container{width:min(1480px,80vw)}body{font-size:17px}}
@@ -177,6 +217,8 @@ function vpy_public_navbar($current = '') {
 
 function vpy_public_footer() {
     $year = date('Y');
+    $storage_js = vpy_storage_js();
+    echo '<script>' . $storage_js . '</script>';
     echo <<<HTML
 <footer class="footer"><div class="container">
     <div class="footer-grid">
