@@ -1,0 +1,110 @@
+[
+    {
+        "id": 1,
+        "key": "basic",
+        "name": "Boshlang'ich",
+        "name_cyrl": "Бошланғич",
+        "description": "Birinchi qadam uchun, sinab ko'rish va asosiy mavzularni o'rganish",
+        "description_cyrl": "Биринчи қадам учун, синаб кўриш ва асосий мавзуларни ўрганиш",
+        "price": 39000,
+        "old_price": 59000,
+        "duration_days": 30,
+        "period_label": "1 oy",
+        "period_label_cyrl": "1 ой",
+        "highlight": false,
+        "popular": false,
+        "active": true,
+        "sort": 1,
+        "features": [
+            "1000 ta savol bazasi",
+            "Kuniga 5 ta to'liq test",
+            "Asosiy statistika",
+            "Mobil va planshet",
+            "Email yordami"
+        ],
+        "features_cyrl": [
+            "1000 та савол базаси",
+            "Кунига 5 та тўлиқ тест",
+            "Асосий статистика",
+            "Мобил ва планшет",
+            "Email ёрдами"
+        ],
+        "created_at": "2026-01-01 09:00:00"
+    },
+    {
+        "id": 2,
+        "key": "standard",
+        "name": "Standart",
+        "name_cyrl": "Стандарт",
+        "description": "Imtihonga to'liq tayyorgarlik uchun optimal tanlov",
+        "description_cyrl": "Имтиҳонга тўлиқ тайёргарлик учун оптимал танлов",
+        "price": 89000,
+        "old_price": 129000,
+        "duration_days": 90,
+        "period_label": "3 oy",
+        "period_label_cyrl": "3 ой",
+        "highlight": true,
+        "popular": true,
+        "active": true,
+        "sort": 2,
+        "features": [
+            "4000+ savol bazasi",
+            "Cheksiz testlar",
+            "Tafsilotli aqlli statistika",
+            "Aqlli takrorlash tizimi",
+            "Barcha 40 ta bilet",
+            "Sertifikat olish",
+            "Telegram bildirishnomalar",
+            "Birinchi navbatda yordam"
+        ],
+        "features_cyrl": [
+            "4000+ савол базаси",
+            "Чексиз тестлар",
+            "Тафсилотли ақлли статистика",
+            "Ақлли такрорлаш тизими",
+            "Барча 40 та билет",
+            "Сертификат олиш",
+            "Телеграм билдиришномалар",
+            "Биринчи навбатда ёрдам"
+        ],
+        "created_at": "2026-01-01 09:00:00"
+    },
+    {
+        "id": 3,
+        "key": "premium",
+        "name": "Premium",
+        "name_cyrl": "Премиум",
+        "description": "Maksimal natija, video darslar va shaxsiy mentor",
+        "description_cyrl": "Максимал натижа, видео дарслар ва шахсий ментор",
+        "price": 249000,
+        "old_price": 399000,
+        "duration_days": 365,
+        "period_label": "1 yil",
+        "period_label_cyrl": "1 йил",
+        "highlight": false,
+        "popular": false,
+        "active": true,
+        "sort": 3,
+        "features": [
+            "Standart tarifning hammasi",
+            "Video darslar to'plami",
+            "Oflayn rejim (PWA)",
+            "Shaxsiy mentor maslahati",
+            "Imtihon kuni qo'llab-quvvatlash",
+            "Premium sertifikat",
+            "Reklamasiz tajriba",
+            "Birinchi yangiliklar"
+        ],
+        "features_cyrl": [
+            "Стандарт тарифнинг ҳаммаси",
+            "Видео дарслар тўплами",
+            "Офлайн режим (PWA)",
+            "Шахсий ментор маслаҳати",
+            "Имтиҳон куни қўллаб-қувватлаш",
+            "Премиум сертификат",
+            "Рекламасиз тажриба",
+            "Биринчи янгиликлар"
+        ],
+        "created_at": "2026-01-01 09:00:00"
+    }
+]

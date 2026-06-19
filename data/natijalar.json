@@ -1,0 +1,7 @@
+[
+    {"id": 1, "user_id": 2, "type": "full", "score": 19, "total": 20, "correct": 19, "wrong": 1, "duration": 712, "answers": [], "created_at": "2026-06-18 18:42:00"},
+    {"id": 2, "user_id": 2, "type": "quick", "score": 17, "total": 20, "correct": 17, "wrong": 3, "duration": 540, "answers": [], "created_at": "2026-06-17 14:10:00"},
+    {"id": 3, "user_id": 3, "type": "full", "score": 20, "total": 20, "correct": 20, "wrong": 0, "duration": 825, "answers": [], "created_at": "2026-06-19 09:05:00"},
+    {"id": 4, "user_id": 5, "type": "full", "score": 20, "total": 20, "correct": 20, "wrong": 0, "duration": 690, "answers": [], "created_at": "2026-06-19 11:22:00"},
+    {"id": 5, "user_id": 4, "type": "quick", "score": 16, "total": 20, "correct": 16, "wrong": 4, "duration": 612, "answers": [], "created_at": "2026-06-17 21:30:00"}
+]
