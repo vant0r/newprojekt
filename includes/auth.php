@@ -48,7 +48,7 @@ function vpy_register($name, $phone, $password, $referral = '') {
     return ['ok' => true, 'user' => $row];
 }
 
-function vpy_login($phone, $password) {
+function vpy_login($phone, $password, $remember = false) {
     $phone = vpy_phone_normalize($phone);
     $u = vpy_find('users', 'phone', $phone);
     if (!$u) return ['ok' => false, 'error' => t('xato_login_yoq', 'Foydalanuvchi topilmadi')];
@@ -57,7 +57,8 @@ function vpy_login($phone, $password) {
     $u['last_login'] = date('Y-m-d H:i:s');
     vpy_upsert('users', $u);
     vpy_login_set($u);
-    vpy_log('login', 'Tizimga kirish', ['user_id' => $u['id']]);
+    if ($remember) vpy_remember_token_set($u['id'], 30);
+    vpy_log('login', 'Tizimga kirish', ['user_id' => $u['id'], 'remember' => (bool)$remember]);
     return ['ok' => true, 'user' => $u];
 }
 
@@ -71,6 +72,7 @@ function vpy_login_set($user) {
 
 function vpy_logout() {
     if (!empty($_SESSION['vpy_user_id'])) {
+        vpy_remember_token_clear($_SESSION['vpy_user_id']);
         vpy_log('logout', 'Tizimdan chiqish', ['user_id' => $_SESSION['vpy_user_id']]);
     }
     $_SESSION = [];
@@ -79,6 +81,17 @@ function vpy_logout() {
         setcookie(session_name(), '', time() - 42000, $params['path'], $params['domain'], $params['secure'], $params['httponly']);
     }
     session_destroy();
+}
+
+function vpy_auto_login_remembered() {
+    if (vpy_is_logged()) return;
+    $u = vpy_remember_token_check();
+    if ($u && ($u['status'] ?? 'active') === 'active') {
+        $u['last_login'] = date('Y-m-d H:i:s');
+        vpy_upsert('users', $u);
+        vpy_login_set($u);
+        vpy_log('auto_login', 'Remember token orqali kirish', ['user_id' => $u['id']]);
+    }
 }
 
 function vpy_user() {
@@ -98,6 +111,7 @@ function vpy_is_admin() {
 }
 
 function vpy_require_login($redirect = '/login.php') {
+    vpy_auto_login_remembered();
     if (!vpy_is_logged()) {
         $_SESSION['vpy_login_redirect'] = $_SERVER['REQUEST_URI'] ?? '/';
         vpy_redirect($redirect);

@@ -71,8 +71,8 @@ $page_desc = vpy_setting('site_description', t('footer_about'));
     --sans:"Manrope","Inter",-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
     --container:min(1320px,92vw);
 }
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;overflow-x:hidden}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;overflow-x:hidden;text-size-adjust:100%}
 body{
     font-family:var(--sans);
     font-weight:400;
@@ -86,6 +86,11 @@ body{
     -webkit-font-smoothing:antialiased;
     text-rendering:optimizeLegibility;
 }
+button,a,input,textarea,select,.btn,.nav-link,.faq-q,.tariff-card,.bento-cell{-webkit-tap-highlight-color:transparent;outline:0}
+button:focus,a:focus{outline:0}
+button:focus-visible,a:focus-visible{outline:2px solid var(--primary);outline-offset:3px;border-radius:8px}
+button,.btn{user-select:none;-webkit-user-select:none}
+::selection{background:rgba(13,107,78,0.18);color:var(--dark)}
 img,svg{max-width:100%;display:block;height:auto}
 a{color:inherit;text-decoration:none;transition:var(--t)}
 button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
@@ -1475,7 +1480,9 @@ section{padding:110px 0;position:relative}
 }
 @media (max-width:768px){
     section{padding:80px 0}
-    .nav-links,.btn-nav{display:none}
+    .nav-links,.btn-nav,.nav-link{display:none}
+    .nav-cta .nav-lang{display:none}
+    .nav-cta{gap:6px}
     .burger{display:flex}
     .navbar{top:12px;width:calc(100% - 24px)}
     .nav-inner{padding:10px 10px 10px 18px}
@@ -1619,6 +1626,10 @@ section{padding:110px 0;position:relative}
 </header>
 
 <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+    <div style="padding:0 8px 18px;border-bottom:1px solid var(--border);margin-bottom:14px;display:flex;gap:8px">
+        <a href="?lang=uz_latin" style="padding:8px 16px;border-radius:80px;font-size:0.85rem;background:<?= !$is_cyrl ? 'var(--primary)' : 'rgba(13,107,78,0.06)' ?>;color:<?= !$is_cyrl ? '#fff' : 'var(--dark-soft)' ?>"><?= e(t('nav_lang_latin')) ?></a>
+        <a href="?lang=uz_cyrillic" style="padding:8px 16px;border-radius:80px;font-size:0.85rem;background:<?= $is_cyrl ? 'var(--primary)' : 'rgba(13,107,78,0.06)' ?>;color:<?= $is_cyrl ? '#fff' : 'var(--dark-soft)' ?>"><?= e(t('nav_lang_cyrillic')) ?></a>
+    </div>
     <a href="#platform"><?= e(t('nav_about')) ?></a>
     <a href="#features"><?= e(t('nav_features')) ?></a>
     <a href="#tariffs"><?= e(t('nav_tariffs')) ?></a>

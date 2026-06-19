@@ -12,7 +12,7 @@ if (vpy_is_post()) {
         $error = t('xato_csrf');
     } else {
         $phone_val = vpy_post('phone');
-        $r = vpy_login($phone_val, vpy_post('password'));
+        $r = vpy_login($phone_val, vpy_post('password'), vpy_post('remember') === '1');
         if ($r['ok']) {
             $redirect = $_SESSION['vpy_login_redirect'] ?? null;
             unset($_SESSION['vpy_login_redirect']);
@@ -49,8 +49,11 @@ $is_cyrl = $lang === 'uz_cyrillic';
     --serif:"Playfair Display",Georgia,serif;
     --sans:"Manrope","Inter",-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
 }
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{-webkit-text-size-adjust:100%}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+button,a,input,textarea,select,.btn{-webkit-tap-highlight-color:transparent;outline:0}
+button:focus,a:focus{outline:0}
+button:focus-visible,a:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
 body{
     font-family:var(--sans);
     font-size:16px;

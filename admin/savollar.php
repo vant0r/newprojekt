@@ -41,7 +41,13 @@ if ($pdo) {
 }
 $pages = max(1, (int)ceil($total / $per_page));
 
-vpy_panel_head(t('admin_questions'));
+vpy_panel_head(t('admin_questions'), <<<CSS
+.q-thumb{width:54px;height:42px;border-radius:10px;overflow:hidden;background:rgba(255,253,249,0.6);border:1px solid var(--border);display:grid;place-items:center;padding:4px;flex-shrink:0}
+.q-thumb img{max-width:100%;max-height:100%;object-fit:contain;border-radius:6px}
+.q-thumb.is-logo{background:linear-gradient(135deg,rgba(13,107,78,0.05),rgba(232,168,56,0.04))}
+.q-thumb.is-logo img{opacity:0.55;filter:grayscale(0.15)}
+@media (min-width:1280px){.q-thumb{width:64px;height:48px}}
+CSS);
 vpy_panel_sidebar('savollar', true);
 ?>
 <main class="main">
@@ -76,13 +82,19 @@ vpy_panel_sidebar('savollar', true);
     <?php else: ?>
     <div style="overflow-x:auto">
         <table class="tbl">
-            <thead><tr><th>#</th><th>Bilet</th><th>Savol</th><th>Mavzu</th><th>To'g'ri</th><th></th></tr></thead>
+            <thead><tr><th>#</th><th>Rasm</th><th>Bilet</th><th>Savol</th><th>Mavzu</th><th>To'g'ri</th><th></th></tr></thead>
             <tbody>
                 <?php foreach ($rows as $r): ?>
                 <tr>
                     <td>#<?= (int)$r['id'] ?></td>
+                    <td>
+                        <?php $rasm = $r['rasm'] ?? ''; $has_image = $rasm && is_file(VPY_ROOT . $rasm); ?>
+                        <div class="q-thumb <?= $has_image ? '' : 'is-logo' ?>" title="<?= $has_image ? 'Yuklangan rasm' : 'Logo (default)' ?>">
+                            <img src="<?= e($has_image ? $rasm : vpy_logo_url()) ?>" alt="" loading="lazy">
+                        </div>
+                    </td>
                     <td><span class="chip chip-muted"><?= sprintf('%02d.%02d', (int)$r['bilet_id'], (int)$r['tartib']) ?></span></td>
-                    <td style="max-width:420px"><?= e(mb_substr($r['savol'], 0, 90, 'UTF-8')) ?><?= mb_strlen($r['savol'], 'UTF-8') > 90 ? '...' : '' ?></td>
+                    <td style="max-width:380px"><?= e(mb_substr($r['savol'], 0, 90, 'UTF-8')) ?><?= mb_strlen($r['savol'], 'UTF-8') > 90 ? '...' : '' ?></td>
                     <td><span class="chip chip-success"><?= e($r['mavzu']) ?></span></td>
                     <td><strong><?= e($r['togri']) ?></strong></td>
                     <td>

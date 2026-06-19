@@ -18,9 +18,15 @@ function vpy_public_css() {
     --sans:"Manrope","Inter",-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
     --container:min(1280px,92vw);
 }
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;overflow-x:hidden}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;overflow-x:hidden;text-size-adjust:100%}
 body{font-family:var(--sans);font-size:clamp(15px,1vw,16px);line-height:1.6;color:var(--dark);background:var(--bg);overflow-x:hidden;min-height:100vh;position:relative;-webkit-font-smoothing:antialiased}
+button,a,input,textarea,select,.btn,.nav-link,.chip{-webkit-tap-highlight-color:transparent;outline:0}
+button:focus,a:focus{outline:0}
+button:focus-visible,a:focus-visible{outline:2px solid var(--primary);outline-offset:2px;border-radius:8px}
+input:focus-visible,textarea:focus-visible,select:focus-visible{outline:0}
+button,.btn{user-select:none;-webkit-user-select:none}
+::selection{background:rgba(13,107,78,0.18);color:var(--dark)}
 body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;opacity:0.3;mix-blend-mode:multiply;background-image:url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/><feColorMatrix values='0 0 0 0 0.12 0 0 0 0 0.10 0 0 0 0 0.08 0 0 0 0.4 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/></svg>")}
 .mesh-bg{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
 .mesh-blob{position:absolute;border-radius:50%;filter:blur(80px);opacity:0.5}
@@ -111,8 +117,45 @@ section{padding:80px 0;position:relative}
 .footer-contact-line svg{width:16px;height:16px;color:var(--accent);flex-shrink:0;margin-top:3px}
 .footer-bottom{border-top:1px solid rgba(255,253,249,0.1);padding-top:28px;display:flex;flex-wrap:wrap;gap:18px;justify-content:space-between;font-size:0.82rem;color:rgba(255,253,249,0.5);position:relative;z-index:2}
 
-@media (max-width:1024px){.nav-links,.btn-nav{display:none}.burger{display:flex}.footer-grid{grid-template-columns:1fr 1fr;gap:40px}}
+@media (max-width:1024px){.nav-links,.btn-nav,.nav-link{display:none}.nav-cta .nav-lang{display:none}.burger{display:flex}.footer-grid{grid-template-columns:1fr 1fr;gap:40px}.nav-cta{gap:6px}}
 @media (max-width:768px){section{padding:60px 0}.page-hero{padding:130px 0 50px}.footer-grid{grid-template-columns:1fr}.footer{padding:60px 0 30px}.container{width:calc(100% - 32px)}}
+@media (max-width:480px){
+    section{padding:48px 0}
+    .page-hero{padding:110px 0 36px}
+    .container{width:calc(100% - 24px)}
+    body{font-size:14px}
+    .h-display{font-size:clamp(1.7rem,8.5vw,2.6rem)}
+    .h-section{font-size:clamp(1.5rem,6.5vw,2.1rem)}
+    .lead{font-size:0.92rem;line-height:1.5}
+    .btn{padding:13px 22px;font-size:0.86rem;border-radius:80px}
+    .btn svg{width:14px;height:14px}
+    .eyebrow{padding:6px 14px;font-size:0.72rem;letter-spacing:0.04em}
+    .navbar{top:10px;width:calc(100% - 20px)}
+    .nav-inner{padding:8px 8px 8px 14px;border-radius:80px}
+    .nav-brand{font-size:1rem;gap:8px}
+    .nav-logo{width:32px;height:32px;border-radius:10px}
+    .nav-logo svg{width:17px;height:17px}
+    .footer{padding:48px 0 24px}
+    .footer-grid{gap:28px;margin-bottom:36px}
+    .footer-brand{font-size:1.1rem}
+    .footer-about{font-size:0.85rem}
+    .footer-col h4{font-size:0.78rem;margin-bottom:14px}
+    .footer-col a,.footer-contact-line{font-size:0.85rem}
+    .footer-bottom{font-size:0.74rem;gap:10px;padding-top:20px}
+}
+@media (max-width:380px){
+    .container{width:calc(100% - 20px)}
+    .h-display{font-size:clamp(1.55rem,9vw,2.3rem)}
+    .h-section{font-size:clamp(1.4rem,7vw,1.9rem)}
+    .lead{font-size:0.88rem}
+    .btn{padding:12px 18px;font-size:0.82rem}
+    .nav-brand{font-size:0.92rem}
+    .navbar{top:8px;width:calc(100% - 16px)}
+    .nav-inner{padding:6px 6px 6px 12px}
+}
+@media (min-width:1280px){body{font-size:16px}.h-display{font-size:clamp(2.6rem,4.6vw,4.8rem)}.h-section{font-size:clamp(2rem,3.4vw,3rem)}.lead{font-size:1.12rem}}
+@media (min-width:1440px){.container{width:min(1380px,90vw)}body{font-size:16.5px}.page-hero{padding:170px 0 80px}}
+@media (min-width:1920px){.container{width:min(1480px,80vw)}body{font-size:17px}}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms!important;transition-duration:0.01ms!important}}
 CSS;
 }
@@ -126,7 +169,7 @@ function vpy_public_head($title, $description = '', $extra_css = '') {
     echo '<meta name="theme-color" content="#0D6B4E">';
     echo '<meta name="description" content="' . e($description ?: vpy_setting('site_description')) . '">';
     echo '<title>' . e($title) . ' — ' . e(t('site_name')) . '</title>';
-    echo '<link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">';
+    echo '<link rel="icon" type="image/svg+xml" href="' . e(vpy_favicon_url()) . '">';
     echo '<link rel="manifest" href="/manifest.json">';
     echo '<link rel="preconnect" href="https://fonts.googleapis.com">';
     echo '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>';
@@ -162,18 +205,22 @@ function vpy_public_navbar($current = '') {
     echo '<button class="burger" id="burger" aria-label="Menyu"><span></span></button>';
     echo '</div></div></header>';
     echo '<div class="mobile-menu" id="mobileMenu">';
+    echo '<div style="padding:0 8px 18px;border-bottom:1px solid var(--border);margin-bottom:14px"><a class="nav-lang" href="?lang=' . ($is_cyrl ? 'uz_latin' : 'uz_cyrillic') . '" style="display:inline-flex;align-items:center;gap:6px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/></svg> ' . ($is_cyrl ? 'O\'zbek lotin' : 'Ўзбек кирилл') . '</a></div>';
     foreach ($items as $it) echo '<a href="' . e($it[0]) . '">' . e($it[2]) . '</a>';
     if (vpy_is_logged()) {
-        echo '<a href="' . (vpy_is_admin() ? '/admin/' : '/user/') . '" class="btn btn-dark" style="margin-top:18px;text-align:center">' . e(t('nav_dashboard')) . '</a>';
+        echo '<a href="' . (vpy_is_admin() ? '/admin/' : '/user/') . '" class="btn btn-dark" style="margin-top:18px;text-align:center;justify-content:center">' . e(t('nav_dashboard')) . '</a>';
+        echo '<a href="/logout.php" style="margin-top:8px;text-align:center;color:#C73E36;font-size:0.9rem">' . e(t('nav_logout')) . '</a>';
     } else {
-        echo '<a href="/login.php" class="btn btn-ghost" style="margin-top:18px;text-align:center">' . e(t('nav_login')) . '</a>';
-        echo '<a href="/register.php" class="btn btn-primary" style="margin-top:8px;text-align:center">' . e(t('nav_register')) . '</a>';
+        echo '<a href="/login.php" class="btn btn-ghost" style="margin-top:18px;text-align:center;justify-content:center">' . e(t('nav_login')) . '</a>';
+        echo '<a href="/register.php" class="btn btn-primary" style="margin-top:8px;text-align:center;justify-content:center">' . e(t('nav_register')) . '</a>';
     }
     echo '</div>';
 }
 
 function vpy_public_footer() {
     $year = date('Y');
+    $storage_js = vpy_storage_js();
+    echo '<script>' . $storage_js . '</script>';
     echo <<<HTML
 <footer class="footer"><div class="container">
     <div class="footer-grid">
