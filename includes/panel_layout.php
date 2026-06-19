@@ -39,7 +39,8 @@ ul{list-style:none}
 input,textarea,select{font:inherit;color:inherit}
 
 .layout{display:grid;grid-template-columns:280px 1fr;min-height:100vh;position:relative;z-index:2}
-.sidebar{position:sticky;top:0;height:100vh;background:var(--glass-strong);backdrop-filter:blur(30px) saturate(180%);-webkit-backdrop-filter:blur(30px) saturate(180%);border-right:1px solid var(--border);padding:28px 22px;display:flex;flex-direction:column;gap:8px;overflow-y:auto;z-index:10}
+.sidebar{position:sticky;top:0;height:100vh;background:var(--glass-strong);backdrop-filter:blur(30px) saturate(180%);-webkit-backdrop-filter:blur(30px) saturate(180%);border-right:1px solid var(--border);padding:28px 22px;display:flex;flex-direction:column;gap:8px;overflow-y:auto;z-index:10;grid-column:1}
+.main{padding:30px 36px;min-width:0;grid-column:2}
 .s-brand{display:flex;align-items:center;gap:12px;padding:8px 12px 24px;font-family:var(--serif);font-weight:700;font-size:1.1rem;color:var(--dark);border-bottom:1px solid var(--border);margin-bottom:16px}
 .s-logo{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--primary),var(--primary-dark));display:grid;place-items:center;color:#fff;box-shadow:0 6px 16px var(--primary-glow);flex-shrink:0}
 .s-logo svg{width:20px;height:20px}
@@ -54,7 +55,6 @@ input,textarea,select{font:inherit;color:inherit}
 .s-link.active .badge{background:rgba(255,255,255,0.25)}
 .s-foot{margin-top:auto;padding-top:16px;border-top:1px solid var(--border)}
 
-.main{padding:30px 36px;min-width:0}
 .topbar{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:30px;flex-wrap:wrap}
 .tb-title h1{font-family:var(--serif);font-weight:500;font-size:clamp(1.6rem,3vw,2.2rem);line-height:1.1;letter-spacing:-0.02em;margin-bottom:4px}
 .tb-title p{font-size:0.92rem;color:var(--muted)}
@@ -141,10 +141,12 @@ table.tbl tbody tr:last-child td{border-bottom:none}
 
 @media (max-width:1024px){
     .layout{grid-template-columns:1fr}
-    .sidebar{position:fixed;top:0;left:-100%;width:280px;transition:left 0.4s cubic-bezier(0.4,0,0.2,1);box-shadow:30px 0 60px rgba(30,27,24,0.15)}
+    .sidebar{position:fixed;top:0;left:-100%;width:min(320px,85vw);transition:left 0.4s cubic-bezier(0.4,0,0.2,1);box-shadow:30px 0 60px rgba(30,27,24,0.15);z-index:60}
     .sidebar.open{left:0}
+    .sidebar.open + .main::before{content:"";position:fixed;inset:0;background:rgba(30,27,24,0.4);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);z-index:50;animation:fadeOverlay 0.3s ease}
+    @keyframes fadeOverlay{from{opacity:0}to{opacity:1}}
     .burger-mobile{display:grid}
-    .main{padding:20px}
+    .main{padding:20px;grid-column:1}
     .field-row{grid-template-columns:1fr}
 }
 @media (max-width:640px){
@@ -417,15 +419,40 @@ function vpy_panel_foot() {
     var burger = document.getElementById('burgerMobile');
     var sidebar = document.getElementById('sidebar');
     if (burger && sidebar) {
+        function closeSidebar(){
+            sidebar.classList.remove('open');
+            document.body.style.overflow = '';
+            burger.setAttribute('aria-expanded', 'false');
+        }
+        function syncSidebarToViewport(){
+            if (window.innerWidth >= 1024) closeSidebar();
+        }
         burger.addEventListener('click', function(e){
             e.stopPropagation();
+            var willOpen = !sidebar.classList.contains('open');
             sidebar.classList.toggle('open');
+            document.body.style.overflow = willOpen ? 'hidden' : '';
+            burger.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
         });
         document.addEventListener('click', function(e){
-            if (sidebar.classList.contains('open') && !sidebar.contains(e.target) && e.target !== burger) {
-                sidebar.classList.remove('open');
+            if (sidebar.classList.contains('open') && !sidebar.contains(e.target) && e.target !== burger && !burger.contains(e.target)) {
+                closeSidebar();
             }
         });
+        sidebar.querySelectorAll('.s-link').forEach(function(a){
+            a.addEventListener('click', function(){
+                if (window.innerWidth < 1024) closeSidebar();
+            });
+        });
+        document.addEventListener('keydown', function(e){
+            if (e.key === 'Escape' && sidebar.classList.contains('open')) closeSidebar();
+        });
+        var resizeTimer;
+        window.addEventListener('resize', function(){
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(syncSidebarToViewport, 100);
+        });
+        syncSidebarToViewport();
     }
     var userPop = document.getElementById('userPop');
     if (userPop) {

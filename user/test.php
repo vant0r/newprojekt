@@ -221,7 +221,41 @@ vpy_panel_sidebar('test', false);
     var form = document.getElementById('testForm');
     var dialog = document.getElementById('confirmDialog');
 
+    /* TEST KEY — autosave uchun */
+    var qIds = [].map.call(questions, function(q){ return q.getAttribute('data-q-id'); }).join(',');
+    var testKey = '<?= e($type . ($bilet_id ? '_b' . $bilet_id : '')) ?>_' + qIds.substring(0, 30);
+
+    /* AUTOSAVE'dan tiklash */
+    if (window.VPY && VPY.testState) {
+        var saved = VPY.testState.load(testKey);
+        if (saved && confirm('Tugatilmagan test mavjud. Davom ettirasizmi?\n\n· Berilgan javoblar: ' + Object.keys(saved.answers || {}).length + '\n· Saqlangan vaqt: ' + new Date(saved.savedAt).toLocaleTimeString())) {
+            answers = saved.answers || {};
+            startTime = saved.startTime || startTime;
+            endTime = startTime + totalDuration * 1000;
+            current = saved.current || 0;
+            Object.keys(answers).forEach(function(qid){
+                questions.forEach(function(q, qi){
+                    if (q.getAttribute('data-q-id') === qid) {
+                        var btn = q.querySelector('.q-answer[data-letter="' + answers[qid] + '"]');
+                        if (btn) btn.classList.add('selected');
+                        var gridBtn = qGrid.querySelectorAll('button')[qi];
+                        if (gridBtn) gridBtn.classList.add('answered');
+                    }
+                });
+            });
+        } else if (saved) {
+            VPY.testState.clear(testKey);
+        }
+    }
+
+    function autoSave(){
+        if (window.VPY && VPY.testState) {
+            VPY.testState.save(testKey, {answers: answers, current: current, startTime: startTime});
+        }
+    }
+
     function show(i){
+        if (i < 0 || i >= total) return;
         questions.forEach(function(q, idx){ q.style.display = idx === i ? '' : 'none'; });
         current = i;
         qNum.textContent = i + 1;
@@ -233,26 +267,35 @@ vpy_panel_sidebar('test', false);
         qGrid.querySelectorAll('button').forEach(function(b, idx){
             b.classList.toggle('current', idx === i);
         });
+        /* SCROLL to top — better UX on long questions */
+        if (window.scrollY > 200) window.scrollTo({top: 0, behavior: 'smooth'});
+        autoSave();
     }
 
-    questions.forEach(function(q, qi){
-        q.querySelectorAll('.q-answer').forEach(function(a){
-            a.addEventListener('click', function(){
-                q.querySelectorAll('.q-answer').forEach(function(x){ x.classList.remove('selected'); });
-                a.classList.add('selected');
-                var qid = q.getAttribute('data-q-id');
-                answers[qid] = a.getAttribute('data-letter');
-                answersInput.value = JSON.stringify(answers);
-                answeredCount.textContent = Object.keys(answers).length + ' javob';
-                qGrid.querySelectorAll('button').forEach(function(b, idx){
-                    if (idx === qi) b.classList.add('answered');
-                });
-            });
+    /* Use event delegation for performance — single listener instead of N listeners */
+    document.querySelectorAll('.q-card').forEach(function(q, qi){
+        q.addEventListener('click', function(e){
+            var ans = e.target.closest('.q-answer');
+            if (!ans) return;
+            q.querySelectorAll('.q-answer').forEach(function(x){ x.classList.remove('selected'); });
+            ans.classList.add('selected');
+            var qid = q.getAttribute('data-q-id');
+            answers[qid] = ans.getAttribute('data-letter');
+            answersInput.value = JSON.stringify(answers);
+            answeredCount.textContent = Object.keys(answers).length + ' / ' + total + ' javob';
+            qGrid.querySelectorAll('button')[qi].classList.add('answered');
+            autoSave();
+            /* Auto-advance to next question (only if not last and after small delay) */
+            if (qi < total - 1) {
+                setTimeout(function(){ if (current === qi) show(qi + 1); }, 350);
+            }
         });
     });
 
     btnNext.addEventListener('click', function(){
         if (current === total - 1) {
+            var unanswered = total - Object.keys(answers).length;
+            if (unanswered > 0 && !confirm(unanswered + ' ta savolga javob bermadingiz. Yakunlaysizmi?')) return;
             dialog.classList.add('show');
         } else {
             show(current + 1);
@@ -269,38 +312,58 @@ vpy_panel_sidebar('test', false);
     function submitForm(){
         durationInput.value = Math.floor((Date.now() - startTime) / 1000);
         answersInput.value = JSON.stringify(answers);
+        if (window.VPY && VPY.testState) VPY.testState.clear(testKey);
         form.submit();
     }
 
+    /* TIMER — RAF-based for accuracy and performance */
+    var lastTickSecond = -1;
     function tick(){
         var rem = Math.max(0, Math.floor((endTime - Date.now()) / 1000));
+        if (rem === lastTickSecond) {
+            requestAnimationFrame(tick);
+            return;
+        }
+        lastTickSecond = rem;
         var m = Math.floor(rem / 60);
         var s = rem % 60;
         timerVal.textContent = m + ':' + (s < 10 ? '0' : '') + s;
-        if (rem < 60) timerBox.classList.add('urgent');
-        if (rem === 0) submitForm();
+        if (rem < 60 && !timerBox.classList.contains('urgent')) timerBox.classList.add('urgent');
+        if (rem === 0) { submitForm(); return; }
+        requestAnimationFrame(tick);
     }
-    tick();
-    setInterval(tick, 1000);
+    requestAnimationFrame(tick);
 
+    /* KEYBOARD shortcuts */
     document.addEventListener('keydown', function(e){
-        if (e.key === 'ArrowRight') btnNext.click();
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+        if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'Enter') { e.preventDefault(); btnNext.click(); }
         if (e.key === 'ArrowLeft') btnPrev.click();
-        if (['1','2','3','4'].indexOf(e.key) !== -1) {
-            var letters = ['A','B','C','D'];
-            var letter = letters[parseInt(e.key, 10) - 1];
-            var qCard = questions[current];
-            var btn = qCard.querySelector('.q-answer[data-letter="' + letter + '"]');
-            if (btn) btn.click();
-        }
+        var key = e.key.toUpperCase();
+        if (['1','A'].indexOf(key) !== -1) clickAnswer('A');
+        if (['2','B'].indexOf(key) !== -1) clickAnswer('B');
+        if (['3','C'].indexOf(key) !== -1) clickAnswer('C');
+        if (['4','D'].indexOf(key) !== -1) clickAnswer('D');
     });
+    function clickAnswer(letter){
+        var qCard = questions[current];
+        if (!qCard) return;
+        var btn = qCard.querySelector('.q-answer[data-letter="' + letter + '"]');
+        if (btn) btn.click();
+    }
 
+    /* PREVENT loss on close */
     window.addEventListener('beforeunload', function(e){
         if (Object.keys(answers).length > 0 && Object.keys(answers).length < total) {
+            autoSave();
             e.preventDefault();
             e.returnValue = '';
         }
     });
+
+    /* INITIAL render */
+    answeredCount.textContent = Object.keys(answers).length + ' / ' + total + ' javob';
+    show(current);
 })();
 </script>
 

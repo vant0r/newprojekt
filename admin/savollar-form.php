@@ -17,6 +17,17 @@ if ($id) {
 }
 $is_edit = !empty($q);
 
+/* Yangi savol uchun avtomatik bilet+tartib */
+if (!$is_edit) {
+    $auto_bilet = (int)vpy_get('bilet', 0);
+    if ($auto_bilet > 0) {
+        $st = $pdo->prepare("SELECT MAX(tartib) FROM test_savollar WHERE bilet_id = :b");
+        $st->execute([':b' => $auto_bilet]);
+        $next_tartib = (int)$st->fetchColumn() + 1;
+        $q = ['bilet_id' => $auto_bilet, 'tartib' => min(20, $next_tartib), 'qiyinlik' => 'orta', 'mavzu' => 'umumiy', 'togri' => 'A', 'holat' => 'faol'];
+    }
+}
+
 if (vpy_is_post() && vpy_csrf_check(vpy_post('csrf'))) {
     $data = [
         'bilet_id' => (int)vpy_post('bilet_id', 1),
@@ -81,6 +92,9 @@ if (vpy_is_post() && vpy_csrf_check(vpy_post('csrf'))) {
         foreach ($data as $k => $v) $st->bindValue(":$k", $v);
         $st->execute();
         vpy_flash_set('success', t('msg_added'));
+    }
+    if (vpy_post('and_new') === '1') {
+        vpy_redirect('/admin/savollar-form.php?bilet=' . $data['bilet_id']);
     }
     vpy_redirect('/admin/savollar.php');
 }
@@ -217,6 +231,7 @@ vpy_panel_sidebar('savollar', true);
 
     <div style="display:flex;gap:10px;margin-top:18px">
         <button type="submit" class="btn btn-primary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg><?= e(t('btn_save')) ?></button>
+        <button type="submit" name="and_new" value="1" class="btn btn-success" title="Ctrl+Enter"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Saqlash va yangi qo'shish</button>
         <a href="/admin/savollar.php" class="btn btn-ghost"><?= e(t('btn_cancel')) ?></a>
     </div>
 </form>
@@ -227,8 +242,7 @@ vpy_panel_sidebar('savollar', true);
     var preview = document.getElementById('imgPreview');
     var info = document.getElementById('fileInfo');
     if (!input || !preview) return;
-    input.addEventListener('change', function(e){
-        var file = e.target.files[0];
+    input.addEventListener('change', function(e){        var file = e.target.files[0];
         if (!file) return;
         var maxBytes = 2 * 1024 * 1024;
         if (file.size > maxBytes){
@@ -248,6 +262,24 @@ vpy_panel_sidebar('savollar', true);
         };
         reader.readAsDataURL(file);
         info.innerHTML = '<strong>' + (file.name) + '</strong> · ' + (file.size/1024).toFixed(0) + ' KB · saqlash uchun "Saqlash" tugmasini bosing';
+    });
+
+    /* Auto-focus first empty required field for fast input */
+    var firstField = document.querySelector('input[name="bilet_id"]');
+    if (firstField && !<?= $is_edit ? 'true' : 'false' ?>) firstField.focus();
+
+    /* Keyboard shortcuts: Ctrl+S save, Ctrl+Enter save and add new */
+    document.addEventListener('keydown', function(e){
+        if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+            e.preventDefault();
+            var btn = document.querySelector('button.btn-primary[type="submit"]');
+            if (btn) btn.click();
+        }
+        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+            e.preventDefault();
+            var btnNew = document.querySelector('button[name="and_new"]');
+            if (btnNew) btnNew.click();
+        }
     });
 })();
 </script>

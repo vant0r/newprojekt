@@ -117,7 +117,7 @@ section{padding:80px 0;position:relative}
 .footer-contact-line svg{width:16px;height:16px;color:var(--accent);flex-shrink:0;margin-top:3px}
 .footer-bottom{border-top:1px solid rgba(255,253,249,0.1);padding-top:28px;display:flex;flex-wrap:wrap;gap:18px;justify-content:space-between;font-size:0.82rem;color:rgba(255,253,249,0.5);position:relative;z-index:2}
 
-@media (max-width:1024px){.nav-links,.btn-nav{display:none}.burger{display:flex}.footer-grid{grid-template-columns:1fr 1fr;gap:40px}}
+@media (max-width:1024px){.nav-links,.btn-nav,.nav-link{display:none}.nav-cta .nav-lang{display:none}.burger{display:flex}.footer-grid{grid-template-columns:1fr 1fr;gap:40px}.nav-cta{gap:6px}}
 @media (max-width:768px){section{padding:60px 0}.page-hero{padding:130px 0 50px}.footer-grid{grid-template-columns:1fr}.footer{padding:60px 0 30px}.container{width:calc(100% - 32px)}}
 @media (max-width:480px){
     section{padding:48px 0}
@@ -205,12 +205,14 @@ function vpy_public_navbar($current = '') {
     echo '<button class="burger" id="burger" aria-label="Menyu"><span></span></button>';
     echo '</div></div></header>';
     echo '<div class="mobile-menu" id="mobileMenu">';
+    echo '<div style="padding:0 8px 18px;border-bottom:1px solid var(--border);margin-bottom:14px"><a class="nav-lang" href="?lang=' . ($is_cyrl ? 'uz_latin' : 'uz_cyrillic') . '" style="display:inline-flex;align-items:center;gap:6px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/></svg> ' . ($is_cyrl ? 'O\'zbek lotin' : 'Ўзбек кирилл') . '</a></div>';
     foreach ($items as $it) echo '<a href="' . e($it[0]) . '">' . e($it[2]) . '</a>';
     if (vpy_is_logged()) {
-        echo '<a href="' . (vpy_is_admin() ? '/admin/' : '/user/') . '" class="btn btn-dark" style="margin-top:18px;text-align:center">' . e(t('nav_dashboard')) . '</a>';
+        echo '<a href="' . (vpy_is_admin() ? '/admin/' : '/user/') . '" class="btn btn-dark" style="margin-top:18px;text-align:center;justify-content:center">' . e(t('nav_dashboard')) . '</a>';
+        echo '<a href="/logout.php" style="margin-top:8px;text-align:center;color:#C73E36;font-size:0.9rem">' . e(t('nav_logout')) . '</a>';
     } else {
-        echo '<a href="/login.php" class="btn btn-ghost" style="margin-top:18px;text-align:center">' . e(t('nav_login')) . '</a>';
-        echo '<a href="/register.php" class="btn btn-primary" style="margin-top:8px;text-align:center">' . e(t('nav_register')) . '</a>';
+        echo '<a href="/login.php" class="btn btn-ghost" style="margin-top:18px;text-align:center;justify-content:center">' . e(t('nav_login')) . '</a>';
+        echo '<a href="/register.php" class="btn btn-primary" style="margin-top:8px;text-align:center;justify-content:center">' . e(t('nav_register')) . '</a>';
     }
     echo '</div>';
 }
