@@ -9,6 +9,7 @@ if (vpy_is_post() && vpy_csrf_check(vpy_post('csrf'))) {
 
     // Handle file uploads
     $upload_fields = ['site_logo','hero_bg_image','banner_image_1','banner_image_2','banner_image_3','login_image_1','login_image_2','login_image_3','founder_image','panel_bg_image'];
+    $upload_groups = ['site_logo'=>'general','hero_bg_image'=>'landing','banner_image_1'=>'landing','banner_image_2'=>'landing','banner_image_3'=>'landing','login_image_1'=>'landing','login_image_2'=>'landing','login_image_3'=>'landing','founder_image'=>'landing','panel_bg_image'=>'landing'];
     foreach ($upload_fields as $uf) {
         if (!empty($_FILES[$uf]['tmp_name']) && is_uploaded_file($_FILES[$uf]['tmp_name'])) {
             $ext = strtolower(pathinfo($_FILES[$uf]['name'], PATHINFO_EXTENSION));
@@ -17,10 +18,11 @@ if (vpy_is_post() && vpy_csrf_check(vpy_post('csrf'))) {
                 $dest = VPY_UPLOADS . '/' . $fname;
                 if (move_uploaded_file($_FILES[$uf]['tmp_name'], $dest)) {
                     $url = '/assets/uploads/' . $fname;
+                    $grp = $upload_groups[$uf] ?? 'landing';
                     if (isset($by_key[$uf])) {
                         $settings[$by_key[$uf]]['value'] = $url;
                     } else {
-                        $settings[] = ['key' => $uf, 'value' => $url, 'group' => 'landing'];
+                        $settings[] = ['key' => $uf, 'value' => $url, 'group' => $grp];
                         $by_key[$uf] = count($settings) - 1;
                     }
                 }
@@ -105,6 +107,22 @@ vpy_panel_sidebar('sozlamalar', true);
     <input type="hidden" name="csrf" value="<?= e(vpy_csrf()) ?>">
 
 <?php if ($current_tab === 'landing'): ?>
+    <!-- SITE LOGO -->
+    <div class="card" style="margin-bottom:18px">
+        <div class="card-head"><h2>Sayt logotipi</h2></div>
+        <p style="font-size:0.85rem;color:var(--muted);margin-bottom:14px">Logo yuklanganida navbarda, footerda, loginda avtomatik ko'rinadi</p>
+        <div class="field">
+            <label>Logo rasmi</label>
+            <div class="upload-box">
+                <input type="file" name="site_logo" accept="image/*">
+                <p style="color:var(--muted);font-size:0.85rem">Logo yuklang (PNG, SVG, WebP)</p>
+                <?php if (!empty($grouped['general']['site_logo'])): ?>
+                <img class="preview" src="<?= e($grouped['general']['site_logo']) ?>" alt="Logo">
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+
     <!-- HERO BACKGROUND -->
     <div class="card" style="margin-bottom:18px">
         <div class="card-head"><h2>Bosh sahifa fon rasmi</h2></div>
