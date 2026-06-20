@@ -81,8 +81,8 @@ function vpy_public_css3() {
     return <<<CSS
 /* NAVBAR */
 .navbar{position:fixed;top:14px;left:50%;transform:translateX(-50%);width:min(1200px,calc(100% - 28px));z-index:1000;transition:var(--t)}
-.nav-inner{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:10px 10px 10px 22px;border-radius:var(--pill);background:var(--glass);backdrop-filter:blur(28px) saturate(180%);-webkit-backdrop-filter:blur(28px) saturate(180%);border:1px solid var(--border);box-shadow:var(--shadow-sm)}
-.navbar.scrolled .nav-inner{background:var(--glass-strong);box-shadow:var(--shadow)}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:10px 10px 10px 22px;border-radius:var(--pill);background:var(--glass);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border:1px solid var(--border-strong);box-shadow:var(--shadow-sm)}
+.navbar.scrolled .nav-inner{background:var(--glass-strong);box-shadow:var(--shadow);border-color:var(--border-strong)}
 .nav-brand{display:flex;align-items:center;gap:11px;font-family:var(--serif);font-size:1.05rem;font-weight:700;color:var(--dark);flex-shrink:0}
 .nav-logo{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--primary),var(--primary-dark));display:grid;place-items:center;color:#fff;box-shadow:0 4px 12px var(--primary-glow)}
 .nav-logo svg{width:18px;height:18px}

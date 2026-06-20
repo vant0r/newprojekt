@@ -87,7 +87,7 @@ function vpy_panel_css2() {
 .user-menu a:hover{background:var(--blue-soft);color:var(--primary)}
 .user-menu a.danger:hover{background:rgba(220,53,69,0.08);color:#DC3545}
 .user-menu hr{border:none;border-top:1px solid var(--border);margin:5px 0}
-.card{background:var(--glass-strong);backdrop-filter:blur(28px) saturate(160%);-webkit-backdrop-filter:blur(28px) saturate(160%);border:1px solid var(--border);border-radius:var(--r-lg);padding:26px;box-shadow:var(--shadow-sm);transition:transform var(--t),box-shadow var(--t)}
+.card{background:var(--glass);backdrop-filter:blur(24px) saturate(160%);-webkit-backdrop-filter:blur(24px) saturate(160%);border:1px solid var(--border-strong);border-radius:var(--r-lg);padding:26px;box-shadow:var(--shadow-sm);transition:transform var(--t),box-shadow var(--t)}
 .card:hover{box-shadow:var(--shadow)}
 .card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:12px}
 .card-head h2{font-family:var(--serif);font-weight:600;font-size:1.3rem;letter-spacing:-0.01em;color:var(--dark)}
