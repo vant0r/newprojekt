@@ -163,6 +163,8 @@ function vpy_panel_head($title, $extra_css = '') {
     echo '</head><body>';
     // Ctrl+U protection
     echo '<script>document.addEventListener("keydown",function(e){if((e.ctrlKey||e.metaKey)&&e.key==="u"){e.preventDefault();window.location="/ogoh.php"}});document.addEventListener("contextmenu",function(e){e.preventDefault();window.location="/ogoh.php"});</script>';
+    // Layout wrapper ochiladi — sidebar + main grid
+    echo '<div class="layout">';
 }
 
 function vpy_panel_sidebar($current, $is_admin = false) {
@@ -235,6 +237,7 @@ function vpy_panel_topbar($title, $subtitle = '', $actions_html = '') {
 }
 
 function vpy_panel_foot() {
+    echo '</div>'; // .layout wrapper yopiladi
     echo <<<'HTML'
 <script>
 (function(){
