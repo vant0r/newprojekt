@@ -8,13 +8,13 @@ function vpy_panel_css() {
     return <<<CSS
 :root{
     --bg:#F4F6F9;--bg2:#EAECF0;--surface:#FFFFFF;--surface2:#F8F9FC;
-    --primary:#1A5FB4;--primary-dark:#144A8C;--primary-light:#3D7DD4;--primary-glow:rgba(26,95,180,0.18);
-    --blue-soft:rgba(26,95,180,0.08);--blue-mid:rgba(26,95,180,0.15);
-    --accent:#2185D0;--accent2:#5DADE2;
-    --dark:#1A1D23;--dark-soft:#353A45;--muted:#6B7280;--light:#FFFFFF;
-    --glass:rgba(255,255,255,0.72);--glass-strong:rgba(255,255,255,0.90);
-    --border:rgba(26,95,180,0.12);--border-strong:rgba(26,95,180,0.22);
-    --shadow-sm:0 2px 8px rgba(26,95,180,0.06);--shadow:0 8px 32px rgba(26,95,180,0.10);
+    --primary:#1456A8;--primary-dark:#0E3D7A;--primary-light:#2B72C9;--primary-glow:rgba(20,86,168,0.22);
+    --blue-soft:rgba(20,86,168,0.10);--blue-mid:rgba(20,86,168,0.18);
+    --accent:#1976B5;--accent2:#4BA3D9;
+    --dark:#111318;--dark-soft:#2C3040;--muted:#5A6070;--light:#FFFFFF;
+    --glass:rgba(255,255,255,0.75);--glass-strong:rgba(255,255,255,0.92);
+    --border:rgba(20,86,168,0.12);--border-strong:rgba(20,86,168,0.24);
+    --shadow-sm:0 2px 8px rgba(20,86,168,0.08);--shadow:0 8px 32px rgba(20,86,168,0.12);
     --r-sm:12px;--r:18px;--r-lg:28px;--pill:100px;
     --t:0.35s cubic-bezier(0.4,0,0.2,1);
     --serif:"Playfair Display",Georgia,serif;
@@ -22,18 +22,18 @@ function vpy_panel_css() {
     --panel-bg-img:none;
 }
 [data-theme="dark"]{
-    --bg:#141416;--bg2:#1C1C1F;--surface:#222225;--surface2:#2A2A2E;
-    --primary:#4A9EE8;--primary-dark:#3A85C9;--primary-light:#6BB3F0;--primary-glow:rgba(74,158,232,0.18);
-    --blue-soft:rgba(74,158,232,0.08);--blue-mid:rgba(74,158,232,0.14);
-    --dark:#EAEAEC;--dark-soft:#B8B8BD;--muted:#8A8A92;--light:#141416;
-    --glass:rgba(28,28,31,0.82);--glass-strong:rgba(34,34,37,0.95);
-    --border:rgba(255,255,255,0.08);--border-strong:rgba(255,255,255,0.14);
-    --shadow-sm:0 2px 8px rgba(0,0,0,0.25);--shadow:0 8px 32px rgba(0,0,0,0.35);
+    --bg:#111113;--bg2:#1A1A1D;--surface:#202024;--surface2:#27272B;
+    --primary:#5AA3E8;--primary-dark:#4088CC;--primary-light:#7BBAEF;--primary-glow:rgba(90,163,232,0.20);
+    --blue-soft:rgba(90,163,232,0.10);--blue-mid:rgba(90,163,232,0.16);
+    --dark:#E8E8EC;--dark-soft:#B0B0B8;--muted:#78788A;--light:#111113;
+    --glass:rgba(26,26,29,0.84);--glass-strong:rgba(32,32,36,0.96);
+    --border:rgba(255,255,255,0.07);--border-strong:rgba(255,255,255,0.13);
+    --shadow-sm:0 2px 8px rgba(0,0,0,0.30);--shadow:0 8px 32px rgba(0,0,0,0.40);
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
 body{font-family:var(--sans);font-size:15px;line-height:1.55;color:var(--dark);background:var(--bg);min-height:100vh;-webkit-font-smoothing:antialiased;overflow-x:hidden;transition:background var(--t),color var(--t)}
-body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background:var(--panel-bg-img);background-size:cover;background-position:center;opacity:0.07}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background:var(--panel-bg-img);background-size:cover;background-position:center;opacity:0.12}
 img,svg{max-width:100%;display:block;height:auto}
 a{color:inherit;text-decoration:none;transition:var(--t)}
 button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
@@ -159,6 +159,11 @@ function vpy_panel_head($title, $extra_css = '') {
     echo '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>';
     echo '<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">';
     echo '<style>' . $css . $extra_css . '</style>';
+    // Inject panel background image if set
+    $panel_bg = vpy_setting('panel_bg_image', '');
+    if ($panel_bg) {
+        echo '<style>:root{--panel-bg-img:url(' . e($panel_bg) . ')}</style>';
+    }
     echo '<script>!function(){var t=localStorage.getItem("vpy_theme");if(t)document.documentElement.setAttribute("data-theme",t);else if(matchMedia("(prefers-color-scheme:dark)").matches)document.documentElement.setAttribute("data-theme","dark")}()</script>';
     echo '</head><body>';
     // Ctrl+U protection
@@ -192,7 +197,12 @@ function vpy_panel_sidebar($current, $is_admin = false) {
         ['/user/profil.php', 'profil', 'profile_title', 'M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2|circle:cx=12,cy=7,r=4'],
     ];
     echo '<aside class="sidebar" id="sidebar">';
-    echo '<a href="/" class="s-brand"><span class="s-logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l2-2 4 4 8-8 4 4"/></svg></span>VatanParvar</a>';
+    $logo_url = vpy_setting('site_logo', '');
+    if ($logo_url) {
+        echo '<a href="/" class="s-brand"><img src="' . e($logo_url) . '" alt="VatanParvar" style="height:32px;width:auto;border-radius:6px"> VatanParvar</a>';
+    } else {
+        echo '<a href="/" class="s-brand"><span class="s-logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l2-2 4 4 8-8 4 4"/></svg></span>VatanParvar</a>';
+    }
     echo '<div class="s-section">' . e($is_admin ? t('admin_title') : t('nav_dashboard')) . '</div>';
     foreach ($items as $it) {
         list($url, $key, $label, $icon) = $it;

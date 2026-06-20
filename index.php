@@ -26,7 +26,7 @@ $page_css = <<<CSS
 /* HERO */
 .hero{position:relative;padding:140px 0 80px;overflow:hidden}
 .hero-bg{position:absolute;inset:0;z-index:0}
-.hero-bg img{width:100%;height:100%;object-fit:cover}
+.hero-bg img{width:100%;height:100%;object-fit:cover;position:fixed;top:0;left:0}
 .hero-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(244,246,249,0.7),rgba(244,246,249,0.5))}
 [data-theme="dark"] .hero-bg::after{background:linear-gradient(135deg,rgba(20,20,22,0.7),rgba(20,20,22,0.5))}
 .hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center;position:relative;z-index:2}

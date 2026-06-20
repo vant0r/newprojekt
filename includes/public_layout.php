@@ -8,15 +8,15 @@ function vpy_public_css() {
 /* === VATANPARVAR DESIGN SYSTEM === */
 :root{
     --bg:#F4F6F9;--bg2:#EAECF0;--surface:#FFFFFF;--surface2:#F8F9FC;
-    --primary:#1A5FB4;--primary-dark:#144A8C;--primary-light:#3D7DD4;--primary-glow:rgba(26,95,180,0.18);
-    --blue-soft:rgba(26,95,180,0.08);--blue-mid:rgba(26,95,180,0.15);
-    --accent:#2185D0;--accent2:#5DADE2;
-    --dark:#1A1D23;--dark-soft:#353A45;--muted:#6B7280;--light:#FFFFFF;
-    --glass:rgba(255,255,255,0.72);--glass-strong:rgba(255,255,255,0.90);
-    --border:rgba(26,95,180,0.12);--border-strong:rgba(26,95,180,0.22);
-    --shadow-sm:0 2px 8px rgba(26,95,180,0.06);
-    --shadow:0 8px 32px rgba(26,95,180,0.10);
-    --shadow-lg:0 20px 60px rgba(26,95,180,0.15);
+    --primary:#1456A8;--primary-dark:#0E3D7A;--primary-light:#2B72C9;--primary-glow:rgba(20,86,168,0.22);
+    --blue-soft:rgba(20,86,168,0.10);--blue-mid:rgba(20,86,168,0.18);
+    --accent:#1976B5;--accent2:#4BA3D9;
+    --dark:#111318;--dark-soft:#2C3040;--muted:#5A6070;--light:#FFFFFF;
+    --glass:rgba(255,255,255,0.75);--glass-strong:rgba(255,255,255,0.92);
+    --border:rgba(20,86,168,0.12);--border-strong:rgba(20,86,168,0.24);
+    --shadow-sm:0 2px 8px rgba(20,86,168,0.08);
+    --shadow:0 8px 32px rgba(20,86,168,0.12);
+    --shadow-lg:0 20px 60px rgba(20,86,168,0.18);
     --r-sm:12px;--r:18px;--r-lg:28px;--r-xl:40px;--pill:100px;
     --t:0.35s cubic-bezier(0.4,0,0.2,1);--t-bounce:0.55s cubic-bezier(0.34,1.56,0.64,1);
     --serif:"Playfair Display",Georgia,serif;
@@ -24,15 +24,15 @@ function vpy_public_css() {
     --container:min(1280px,92vw);
 }
 [data-theme="dark"]{
-    --bg:#141416;--bg2:#1C1C1F;--surface:#222225;--surface2:#2A2A2E;
-    --primary:#4A9EE8;--primary-dark:#3A85C9;--primary-light:#6BB3F0;--primary-glow:rgba(74,158,232,0.18);
-    --blue-soft:rgba(74,158,232,0.08);--blue-mid:rgba(74,158,232,0.14);
-    --dark:#EAEAEC;--dark-soft:#B8B8BD;--muted:#8A8A92;--light:#141416;
-    --glass:rgba(28,28,31,0.82);--glass-strong:rgba(34,34,37,0.95);
-    --border:rgba(255,255,255,0.08);--border-strong:rgba(255,255,255,0.14);
-    --shadow-sm:0 2px 8px rgba(0,0,0,0.25);
-    --shadow:0 8px 32px rgba(0,0,0,0.35);
-    --shadow-lg:0 20px 60px rgba(0,0,0,0.45);
+    --bg:#111113;--bg2:#1A1A1D;--surface:#202024;--surface2:#27272B;
+    --primary:#5AA3E8;--primary-dark:#4088CC;--primary-light:#7BBAEF;--primary-glow:rgba(90,163,232,0.20);
+    --blue-soft:rgba(90,163,232,0.10);--blue-mid:rgba(90,163,232,0.16);
+    --dark:#E8E8EC;--dark-soft:#B0B0B8;--muted:#78788A;--light:#111113;
+    --glass:rgba(26,26,29,0.84);--glass-strong:rgba(32,32,36,0.96);
+    --border:rgba(255,255,255,0.07);--border-strong:rgba(255,255,255,0.13);
+    --shadow-sm:0 2px 8px rgba(0,0,0,0.30);
+    --shadow:0 8px 32px rgba(0,0,0,0.40);
+    --shadow-lg:0 20px 60px rgba(0,0,0,0.50);
 }
 CSS;
 }
@@ -230,7 +230,12 @@ function vpy_public_navbar($current = '') {
 function vpy_public_footer() {
     $year = date('Y');
     echo '<footer class="footer"><div class="container"><div class="footer-grid"><div>';
-    echo '<a href="/" class="footer-brand"><span class="nav-logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l2-2 4 4 8-8 4 4"/></svg></span>VatanParvar</a>';
+    $logo_url = vpy_setting('site_logo', '');
+    if ($logo_url) {
+        echo '<a href="/" class="footer-brand"><img src="' . e($logo_url) . '" alt="VatanParvar" style="height:32px;width:auto;border-radius:6px"> VatanParvar</a>';
+    } else {
+        echo '<a href="/" class="footer-brand"><span class="nav-logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l2-2 4 4 8-8 4 4"/></svg></span>VatanParvar</a>';
+    }
     echo '<p class="footer-about">' . e(t('footer_about')) . '</p>';
     echo '<div class="footer-social">';
     echo '<a href="https://t.me/' . e(ltrim(vpy_setting('contact_telegram', 'vatanparvaryaypan'), '@')) . '" target="_blank" aria-label="Telegram"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg></a>';

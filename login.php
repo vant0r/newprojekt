@@ -63,17 +63,17 @@ $initial_mode = $mode;
 <script>document.addEventListener("keydown",function(e){if((e.ctrlKey||e.metaKey)&&e.key==="u"){e.preventDefault();window.location="/ogoh.php"}});document.addEventListener("contextmenu",function(e){e.preventDefault();window.location="/ogoh.php"});</script>
 
 <style>
-:root{--bg:#F4F6F9;--primary:#1A5FB4;--primary-dark:#144A8C;--primary-glow:rgba(26,95,180,0.18);--dark:#1A1D23;--dark-soft:#353A45;--muted:#6B7280;--light:#FFFFFF;--glass:rgba(255,255,255,0.82);--glass-strong:rgba(255,255,255,0.94);--border:rgba(26,95,180,0.10);--border-strong:rgba(26,95,180,0.18);--shadow:0 8px 32px rgba(26,95,180,0.10);--r:18px;--r-lg:28px;--pill:100px;--t:0.4s cubic-bezier(0.4,0,0.2,1);--sans:"Manrope",sans-serif;--serif:"Playfair Display",serif}
-[data-theme="dark"]{--bg:#141416;--primary:#4A9EE8;--primary-dark:#3A85C9;--primary-glow:rgba(74,158,232,0.15);--dark:#EAEAEC;--dark-soft:#B8B8BD;--muted:#8A8A92;--light:#141416;--glass:rgba(28,28,31,0.85);--glass-strong:rgba(34,34,37,0.96);--border:rgba(255,255,255,0.06);--border-strong:rgba(255,255,255,0.12);--shadow:0 8px 32px rgba(0,0,0,0.35)}
+:root{--bg:#F4F6F9;--primary:#1456A8;--primary-dark:#0E3D7A;--primary-glow:rgba(20,86,168,0.22);--dark:#111318;--dark-soft:#2C3040;--muted:#5A6070;--light:#FFFFFF;--glass:rgba(255,255,255,0.82);--glass-strong:rgba(255,255,255,0.94);--border:rgba(20,86,168,0.10);--border-strong:rgba(20,86,168,0.20);--shadow:0 8px 32px rgba(20,86,168,0.12);--r:18px;--r-lg:28px;--pill:100px;--t:0.4s cubic-bezier(0.4,0,0.2,1);--sans:"Manrope",sans-serif;--serif:"Playfair Display",serif}
+[data-theme="dark"]{--bg:#111113;--primary:#5AA3E8;--primary-dark:#4088CC;--primary-glow:rgba(90,163,232,0.18);--dark:#E8E8EC;--dark-soft:#B0B0B8;--muted:#78788A;--light:#111113;--glass:rgba(26,26,29,0.86);--glass-strong:rgba(32,32,36,0.96);--border:rgba(255,255,255,0.06);--border-strong:rgba(255,255,255,0.12);--shadow:0 8px 32px rgba(0,0,0,0.40)}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{font-family:var(--sans);font-weight:500;font-size:16px;line-height:1.6;color:var(--dark);background:var(--bg);min-height:100vh;overflow:hidden;transition:background var(--t),color var(--t)}
-.auth-layout{display:grid;grid-template-columns:1fr 1fr;width:100%;min-height:100vh;position:relative;transition:none}
-/* When register mode — image goes LEFT, form goes RIGHT */
-.auth-layout.mode-register .auth-left{order:2}
-.auth-layout.mode-register .auth-right{order:1}
-/* Animate the swap with transform */
-.auth-left{position:relative;display:flex;align-items:center;justify-content:center;padding:40px 36px;overflow:hidden;order:1;transition:transform 0.6s cubic-bezier(0.4,0,0.2,1)}
-.auth-right{order:2;transition:transform 0.6s cubic-bezier(0.4,0,0.2,1)}
+.auth-layout{display:grid;grid-template-columns:1fr 1fr;width:100%;min-height:100vh;position:relative;perspective:1200px}
+/* Image and form swap with 3D rotation */
+.auth-left{position:relative;display:flex;align-items:center;justify-content:center;padding:40px 36px;overflow:hidden;order:1;z-index:2;transition:transform 0.7s cubic-bezier(0.4,0,0.2,1),opacity 0.5s ease}
+.auth-right{order:2;z-index:1;transition:transform 0.7s cubic-bezier(0.4,0,0.2,1),opacity 0.5s ease}
+/* When register mode — smooth slide swap */
+.auth-layout.mode-register .auth-left{transform:translateX(100%)}
+.auth-layout.mode-register .auth-right{transform:translateX(-100%)}
 .auth-left-inner{width:100%;max-width:420px;position:relative;height:480px}
 /* PANELS with slide animation */
 .auth-panel{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;transition:transform 0.55s cubic-bezier(0.4,0,0.2,1),opacity 0.4s ease;will-change:transform,opacity}
@@ -138,11 +138,11 @@ h1 em{font-style:italic;color:var(--primary)}
 .dot.active{background:#fff;width:22px;border-radius:4px}
 /* RESPONSIVE — mobile */
 @media (max-width:900px){
-    .auth-layout{grid-template-columns:1fr}
-    .auth-layout.mode-register .auth-left{order:1}
-    .auth-layout.mode-register .auth-right{order:0}
+    .auth-layout{grid-template-columns:1fr;perspective:none}
+    .auth-layout.mode-register .auth-left{transform:none}
+    .auth-layout.mode-register .auth-right{transform:none}
     .auth-right{position:fixed;inset:0;z-index:0}
-    .auth-left{position:relative;z-index:2;background:transparent;padding:90px 20px 40px}
+    .auth-left{position:relative;z-index:2;background:transparent;padding:90px 20px 40px;transform:none!important}
     .auth-left-inner{background:var(--glass);backdrop-filter:blur(32px);-webkit-backdrop-filter:blur(32px);border:1px solid var(--border);border-radius:var(--r-lg);padding:32px 24px;box-shadow:var(--shadow);height:auto}
     .auth-panel{position:relative;inset:auto}
     .auth-panel.panel-register{position:absolute;inset:0;padding:32px 24px}
