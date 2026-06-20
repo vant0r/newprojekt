@@ -77,7 +77,7 @@ $page_css = <<<CSS
 /* BANNER */
 .banner-section{display:none;padding:0;margin-top:-30px;position:relative;z-index:2}
 @media (min-width:769px){.banner-section{display:block}}
-.banner-slider{position:relative;border-radius:var(--r-lg);overflow:hidden;height:220px;box-shadow:var(--shadow-lg)}
+.banner-slider{position:relative;border-radius:var(--r-lg);overflow:hidden;height:320px;box-shadow:var(--shadow-lg)}
 .banner-slide{position:absolute;inset:0;opacity:0;transition:opacity 1.2s ease}
 .banner-slide.active{opacity:1}
 .banner-slide img{width:100%;height:100%;object-fit:cover}

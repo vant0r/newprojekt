@@ -24,15 +24,15 @@ function vpy_public_css() {
     --container:min(1280px,92vw);
 }
 [data-theme="dark"]{
-    --bg:#0F1117;--bg2:#161B27;--surface:#1A2035;--surface2:#1E2640;
-    --primary:#3D7DD4;--primary-dark:#2B6CBF;--primary-light:#5B96E0;--primary-glow:rgba(61,125,212,0.22);
-    --blue-soft:rgba(61,125,212,0.12);--blue-mid:rgba(61,125,212,0.20);
-    --dark:#F0F4FF;--dark-soft:#C5CEDF;--muted:#7A8BA8;--light:#0F1117;
-    --glass:rgba(26,32,50,0.80);--glass-strong:rgba(26,32,50,0.95);
-    --border:rgba(61,125,212,0.18);--border-strong:rgba(61,125,212,0.30);
-    --shadow-sm:0 2px 8px rgba(0,0,0,0.20);
-    --shadow:0 8px 32px rgba(0,0,0,0.28);
-    --shadow-lg:0 20px 60px rgba(0,0,0,0.38);
+    --bg:#141416;--bg2:#1C1C1F;--surface:#222225;--surface2:#2A2A2E;
+    --primary:#4A9EE8;--primary-dark:#3A85C9;--primary-light:#6BB3F0;--primary-glow:rgba(74,158,232,0.18);
+    --blue-soft:rgba(74,158,232,0.08);--blue-mid:rgba(74,158,232,0.14);
+    --dark:#EAEAEC;--dark-soft:#B8B8BD;--muted:#8A8A92;--light:#141416;
+    --glass:rgba(28,28,31,0.82);--glass-strong:rgba(34,34,37,0.95);
+    --border:rgba(255,255,255,0.08);--border-strong:rgba(255,255,255,0.14);
+    --shadow-sm:0 2px 8px rgba(0,0,0,0.25);
+    --shadow:0 8px 32px rgba(0,0,0,0.35);
+    --shadow-lg:0 20px 60px rgba(0,0,0,0.45);
 }
 CSS;
 }
@@ -41,7 +41,7 @@ function vpy_public_css2() {
     return <<<CSS
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;overflow-x:hidden}
-body{font-family:var(--sans);font-size:clamp(15px,1vw,16px);line-height:1.65;color:var(--dark);background:var(--bg);overflow-x:hidden;min-height:100vh;position:relative;-webkit-font-smoothing:antialiased;transition:background var(--t),color var(--t)}
+body{font-family:var(--sans);font-weight:500;font-size:clamp(15px,1vw,16px);line-height:1.65;color:var(--dark);background:var(--bg);overflow-x:hidden;min-height:100vh;position:relative;-webkit-font-smoothing:antialiased;transition:background var(--t),color var(--t)}
 img,svg{max-width:100%;display:block;height:auto}
 a{color:inherit;text-decoration:none;transition:var(--t)}
 button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
@@ -49,14 +49,14 @@ ul{list-style:none}
 input,textarea,select{font:inherit;color:inherit}
 main{position:relative;z-index:2}
 .container{width:var(--container);margin:0 auto;position:relative}
-.h-display{font-family:var(--serif);font-weight:700;font-size:clamp(2rem,4.5vw,4rem);line-height:1.08;letter-spacing:-0.02em;color:var(--dark)}
+.h-display{font-family:var(--serif);font-weight:800;font-size:clamp(2rem,4.5vw,4rem);line-height:1.08;letter-spacing:-0.02em;color:var(--dark)}
 .h-display em{font-style:italic;font-weight:600;color:var(--primary)}
-.h-section{font-family:var(--serif);font-weight:600;font-size:clamp(1.6rem,3vw,2.6rem);line-height:1.1;letter-spacing:-0.015em}
-.h-card{font-family:var(--sans);font-weight:700;font-size:clamp(1rem,1.4vw,1.2rem);letter-spacing:-0.01em;line-height:1.3}
-.eyebrow{display:inline-flex;align-items:center;gap:8px;padding:7px 16px;background:var(--blue-soft);border:1px solid var(--border);border-radius:var(--pill);font-size:0.75rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--primary)}
+.h-section{font-family:var(--serif);font-weight:700;font-size:clamp(1.6rem,3vw,2.6rem);line-height:1.1;letter-spacing:-0.015em}
+.h-card{font-family:var(--sans);font-weight:800;font-size:clamp(1rem,1.4vw,1.2rem);letter-spacing:-0.01em;line-height:1.3}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;padding:7px 16px;background:var(--blue-soft);border:1px solid var(--border);border-radius:var(--pill);font-size:0.75rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--primary)}
 .eyebrow::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--primary);box-shadow:0 0 0 3px var(--blue-mid);animation:vp 2s ease-in-out infinite}
 @keyframes vp{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.5);opacity:0.6}}
-.lead{font-size:clamp(0.97rem,1.1vw,1.08rem);line-height:1.7;color:var(--muted);max-width:60ch}
+.lead{font-size:clamp(0.97rem,1.1vw,1.08rem);font-weight:500;line-height:1.7;color:var(--muted);max-width:60ch}
 .muted{color:var(--muted)}
 .reveal{opacity:0;transform:translateY(28px);transition:opacity 0.7s ease,transform 0.7s ease}
 .reveal.in{opacity:1;transform:translateY(0)}
