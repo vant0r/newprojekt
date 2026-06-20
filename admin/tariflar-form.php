@@ -17,6 +17,9 @@ if (vpy_is_post() && vpy_csrf_check(vpy_post('csrf'))) {
     $row['price'] = (float)vpy_post('price');
     $row['old_price'] = (float)vpy_post('old_price');
     $row['duration_days'] = (int)vpy_post('duration_days', 30);
+    $row['min_days'] = (int)vpy_post('min_days', 1);
+    $row['max_days'] = (int)vpy_post('max_days', 100);
+    $row['price_per_day'] = (float)vpy_post('price_per_day', 0);
     $row['period_label'] = vpy_post('period_label', '1 oy');
     $row['period_label_cyrl'] = vpy_post('period_label_cyrl', '1 ой');
     $row['active'] = vpy_post('active') === '1';
@@ -67,7 +70,15 @@ vpy_panel_sidebar('tariflar', true);
         </div>
         <div class="field-row">
             <div class="field"><label>Muddat (kun)</label><input type="number" name="duration_days" value="<?= (int)($tariff['duration_days'] ?? 30) ?>" required min="1"></div>
-            <div class="field"><label>Davr yorlig'i (lotin / kirill)</label><div style="display:flex;gap:8px"><input type="text" name="period_label" value="<?= e($tariff['period_label'] ?? '1 oy') ?>"><input type="text" name="period_label_cyrl" value="<?= e($tariff['period_label_cyrl'] ?? '1 ой') ?>"></div></div>
+            <div class="field"><label>Kunlik narx (so'm)</label><input type="number" name="price_per_day" value="<?= (int)($tariff['price_per_day'] ?? 0) ?>" min="0"></div>
+        </div>
+        <div class="field-row">
+            <div class="field"><label>Min kunlar</label><input type="number" name="min_days" value="<?= (int)($tariff['min_days'] ?? 1) ?>" min="1"></div>
+            <div class="field"><label>Max kunlar</label><input type="number" name="max_days" value="<?= (int)($tariff['max_days'] ?? 100) ?>" min="1"></div>
+        </div>
+        <div class="field-row">
+            <div class="field"><label>Davr yorlig'i (lotin)</label><input type="text" name="period_label" value="<?= e($tariff['period_label'] ?? '1 oy') ?>"></div>
+            <div class="field"><label>Davr yorlig'i (kirill)</label><input type="text" name="period_label_cyrl" value="<?= e($tariff['period_label_cyrl'] ?? '1 ой') ?>"></div>
         </div>
     </div>
 
