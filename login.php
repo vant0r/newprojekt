@@ -67,9 +67,13 @@ $initial_mode = $mode;
 [data-theme="dark"]{--bg:#141416;--primary:#4A9EE8;--primary-dark:#3A85C9;--primary-glow:rgba(74,158,232,0.15);--dark:#EAEAEC;--dark-soft:#B8B8BD;--muted:#8A8A92;--light:#141416;--glass:rgba(28,28,31,0.85);--glass-strong:rgba(34,34,37,0.96);--border:rgba(255,255,255,0.06);--border-strong:rgba(255,255,255,0.12);--shadow:0 8px 32px rgba(0,0,0,0.35)}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{font-family:var(--sans);font-weight:500;font-size:16px;line-height:1.6;color:var(--dark);background:var(--bg);min-height:100vh;overflow:hidden;transition:background var(--t),color var(--t)}
-.auth-layout{display:grid;grid-template-columns:1fr 1fr;width:100%;min-height:100vh;position:relative}
-/* LEFT SIDE — FORMS */
-.auth-left{position:relative;display:flex;align-items:center;justify-content:center;padding:40px 36px;overflow:hidden}
+.auth-layout{display:grid;grid-template-columns:1fr 1fr;width:100%;min-height:100vh;position:relative;transition:none}
+/* When register mode — image goes LEFT, form goes RIGHT */
+.auth-layout.mode-register .auth-left{order:2}
+.auth-layout.mode-register .auth-right{order:1}
+/* Animate the swap with transform */
+.auth-left{position:relative;display:flex;align-items:center;justify-content:center;padding:40px 36px;overflow:hidden;order:1;transition:transform 0.6s cubic-bezier(0.4,0,0.2,1)}
+.auth-right{order:2;transition:transform 0.6s cubic-bezier(0.4,0,0.2,1)}
 .auth-left-inner{width:100%;max-width:420px;position:relative;height:480px}
 /* PANELS with slide animation */
 .auth-panel{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;transition:transform 0.55s cubic-bezier(0.4,0,0.2,1),opacity 0.4s ease;will-change:transform,opacity}
@@ -135,6 +139,8 @@ h1 em{font-style:italic;color:var(--primary)}
 /* RESPONSIVE — mobile */
 @media (max-width:900px){
     .auth-layout{grid-template-columns:1fr}
+    .auth-layout.mode-register .auth-left{order:1}
+    .auth-layout.mode-register .auth-right{order:0}
     .auth-right{position:fixed;inset:0;z-index:0}
     .auth-left{position:relative;z-index:2;background:transparent;padding:90px 20px 40px}
     .auth-left-inner{background:var(--glass);backdrop-filter:blur(32px);-webkit-backdrop-filter:blur(32px);border:1px solid var(--border);border-radius:var(--r-lg);padding:32px 24px;box-shadow:var(--shadow);height:auto}
@@ -151,7 +157,7 @@ h1 em{font-style:italic;color:var(--primary)}
     <button class="switch-link" id="switchBtn"><?= $initial_mode === 'register' ? e(t('nav_login')) : e(t('nav_register')) ?></button>
 </div>
 
-<div class="auth-layout">
+<div class="auth-layout <?= $initial_mode === 'register' ? 'mode-register' : '' ?>">
     <section class="auth-left">
         <div class="auth-left-inner <?= $initial_mode === 'register' ? 'mode-register' : '' ?>" id="authInner">
             <!-- LOGIN PANEL -->
@@ -221,6 +227,7 @@ h1 em{font-style:italic;color:var(--primary)}
 <script>
 (function(){
     var inner=document.getElementById('authInner');
+    var layout=document.querySelector('.auth-layout');
     var switchBtn=document.getElementById('switchBtn');
     var currentMode='<?= e($initial_mode) ?>';
 
@@ -228,9 +235,11 @@ h1 em{font-style:italic;color:var(--primary)}
         currentMode=mode;
         if(mode==='register'){
             inner.classList.add('mode-register');
+            layout.classList.add('mode-register');
             switchBtn.textContent='<?= e(t('nav_login')) ?>';
         }else{
             inner.classList.remove('mode-register');
+            layout.classList.remove('mode-register');
             switchBtn.textContent='<?= e(t('nav_register')) ?>';
         }
     };
