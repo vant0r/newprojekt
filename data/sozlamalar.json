@@ -1,5 +1,6 @@
 [
     {"key": "site_name", "value": "VatanParvar Yaypan", "group": "general"},
+    {"key": "site_logo", "value": "", "group": "general"},
     {"key": "site_description", "value": "Yaypan avtomaktabi uchun yo'l harakati qoidalari nazariy imtihoniga onlayn tayyorlanish premium platformasi", "group": "general"},
     {"key": "site_keywords", "value": "yaypan avtomaktab, yhq, yo'l harakati qoidalari, online imtihon, gai imtihon, online test", "group": "general"},
     {"key": "contact_phone", "value": "+998 90 123 45 67", "group": "contact"},

@@ -8,7 +8,7 @@ if (vpy_is_post() && vpy_csrf_check(vpy_post('csrf'))) {
     foreach ($settings as $i => $s) $by_key[$s['key']] = $i;
 
     // Handle file uploads
-    $upload_fields = ['hero_bg_image','banner_image_1','banner_image_2','banner_image_3','login_image_1','login_image_2','login_image_3','founder_image','panel_bg_image'];
+    $upload_fields = ['site_logo','hero_bg_image','banner_image_1','banner_image_2','banner_image_3','login_image_1','login_image_2','login_image_3','founder_image','panel_bg_image'];
     foreach ($upload_fields as $uf) {
         if (!empty($_FILES[$uf]['tmp_name']) && is_uploaded_file($_FILES[$uf]['tmp_name'])) {
             $ext = strtolower(pathinfo($_FILES[$uf]['name'], PATHINFO_EXTENSION));

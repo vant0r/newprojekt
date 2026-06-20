@@ -27,8 +27,8 @@ $page_css = <<<CSS
 .hero{position:relative;padding:140px 0 80px;overflow:hidden}
 .hero-bg{position:absolute;inset:0;z-index:0}
 .hero-bg img{width:100%;height:100%;object-fit:cover}
-.hero-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(244,246,249,0.92),rgba(244,246,249,0.8))}
-[data-theme="dark"] .hero-bg::after{background:linear-gradient(135deg,rgba(15,17,23,0.92),rgba(15,17,23,0.8))}
+.hero-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(244,246,249,0.7),rgba(244,246,249,0.5))}
+[data-theme="dark"] .hero-bg::after{background:linear-gradient(135deg,rgba(20,20,22,0.7),rgba(20,20,22,0.5))}
 .hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center;position:relative;z-index:2}
 .hero-content h1{margin-top:18px}
 .hero-sub{margin-top:20px;max-width:50ch}
@@ -209,7 +209,7 @@ vpy_public_navbar('home');
 <main>
 <!-- TICKER STRIP -->
 <?php if (!empty($ticker_texts)): ?>
-<div class="ticker-wrap" style="margin-top:70px">
+<div class="ticker-wrap" style="margin-top:84px">
     <div class="ticker-inner">
         <?php for ($rep = 0; $rep < 3; $rep++): foreach ($ticker_texts as $txt): ?>
         <span class="ticker-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg><?= e($txt) ?></span>

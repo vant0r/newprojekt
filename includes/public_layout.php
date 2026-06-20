@@ -49,9 +49,9 @@ ul{list-style:none}
 input,textarea,select{font:inherit;color:inherit}
 main{position:relative;z-index:2}
 .container{width:var(--container);margin:0 auto;position:relative}
-.h-display{font-family:var(--serif);font-weight:800;font-size:clamp(2rem,4.5vw,4rem);line-height:1.08;letter-spacing:-0.02em;color:var(--dark)}
+.h-display{font-family:var(--sans);font-weight:800;font-size:clamp(2rem,4.5vw,4rem);line-height:1.08;letter-spacing:-0.03em;color:var(--dark)}
 .h-display em{font-style:italic;font-weight:600;color:var(--primary)}
-.h-section{font-family:var(--serif);font-weight:700;font-size:clamp(1.6rem,3vw,2.6rem);line-height:1.1;letter-spacing:-0.015em}
+.h-section{font-family:var(--sans);font-weight:700;font-size:clamp(1.6rem,3vw,2.6rem);line-height:1.1;letter-spacing:-0.02em}
 .h-card{font-family:var(--sans);font-weight:800;font-size:clamp(1rem,1.4vw,1.2rem);letter-spacing:-0.01em;line-height:1.3}
 .eyebrow{display:inline-flex;align-items:center;gap:8px;padding:7px 16px;background:var(--blue-soft);border:1px solid var(--border);border-radius:var(--pill);font-size:0.75rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--primary)}
 .eyebrow::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--primary);box-shadow:0 0 0 3px var(--blue-mid);animation:vp 2s ease-in-out infinite}
@@ -186,7 +186,12 @@ function vpy_public_navbar($current = '') {
         ['/aloqa.php', 'aloqa', t('nav_contact')],
     ];
     echo '<header class="navbar" id="navbar"><div class="nav-inner">';
-    echo '<a href="/" class="nav-brand"><span class="nav-logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l2-2 4 4 8-8 4 4"/></svg></span>VatanParvar</a>';
+    $logo_url = vpy_setting('site_logo', '');
+    if ($logo_url) {
+        echo '<a href="/" class="nav-brand"><img src="' . e($logo_url) . '" alt="VatanParvar" style="height:34px;width:auto;border-radius:8px"> VatanParvar</a>';
+    } else {
+        echo '<a href="/" class="nav-brand"><span class="nav-logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l2-2 4 4 8-8 4 4"/></svg></span>VatanParvar</a>';
+    }
     echo '<nav class="nav-links">';
     foreach ($items as $it) {
         $cls = $current === $it[1] ? 'active' : '';
