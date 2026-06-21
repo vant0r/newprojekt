@@ -7,8 +7,26 @@ vpy_require_admin('/login.php');
 if (vpy_is_post() && vpy_csrf_check(vpy_post('csrf'))) {
     $user_id = (int)vpy_post('user_id');
     $msg = trim(vpy_post('message', ''));
-    if ($user_id && mb_strlen($msg, 'UTF-8') >= 1) {
-        vpy_support_send($user_id, $msg, true);
+    $file_url = '';
+
+    // File upload (max 2MB)
+    if (!empty($_FILES['chatfile']['tmp_name']) && is_uploaded_file($_FILES['chatfile']['tmp_name'])) {
+        if ($_FILES['chatfile']['size'] <= 2 * 1024 * 1024) {
+            $ext = strtolower(pathinfo($_FILES['chatfile']['name'], PATHINFO_EXTENSION));
+            if (in_array($ext, ['jpg','jpeg','png','webp','gif','pdf','doc','docx'])) {
+                $fname = 'chat_admin_' . time() . '.' . $ext;
+                $dest = VPY_UPLOADS . '/' . $fname;
+                if (move_uploaded_file($_FILES['chatfile']['tmp_name'], $dest)) {
+                    $file_url = '/assets/uploads/' . $fname;
+                }
+            }
+        }
+    }
+
+    if ($user_id && (mb_strlen($msg, 'UTF-8') >= 1 || $file_url)) {
+        $full_msg = $msg;
+        if ($file_url) $full_msg = $full_msg ? $full_msg . "\n[fayl:" . $file_url . ']' : '[fayl:' . $file_url . ']';
+        vpy_support_send($user_id, $full_msg, true);
         vpy_flash_set('success', 'Javob yuborildi');
     }
     vpy_redirect('/admin/support.php?user=' . $user_id);
@@ -111,15 +129,29 @@ vpy_panel_sidebar('sozlamalar', true);
         <div class="chat-body" id="chatBody">
             <?php foreach ($selected_messages as $m): ?>
             <div class="chat-msg <?= !empty($m['is_admin']) ? 'from-admin' : 'from-user' ?>">
-                <div><?= e($m['message']) ?></div>
+                <?php
+                $text = $m['message'] ?? '';
+                if (preg_match('/\[fayl:([^\]]+)\]/', $text, $fm)) {
+                    $file = $fm[1]; $text = trim(str_replace($fm[0], '', $text));
+                    $is_img = preg_match('/\.(jpg|jpeg|png|webp|gif)$/i', $file);
+                } else { $file = ''; $is_img = false; }
+                ?>
+                <?php if ($text): ?><div><?= e($text) ?></div><?php endif; ?>
+                <?php if ($file && $is_img): ?>
+                <a href="<?= e($file) ?>" target="_blank" style="display:block;margin-top:6px"><img src="<?= e($file) ?>" alt="" style="max-width:180px;border-radius:8px"></a>
+                <?php elseif ($file): ?>
+                <a href="<?= e($file) ?>" target="_blank" style="display:inline-flex;align-items:center;gap:5px;margin-top:6px;padding:5px 10px;background:rgba(0,0,0,0.1);border-radius:6px;font-size:0.75rem;font-weight:600"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/></svg>Fayl</a>
+                <?php endif; ?>
                 <div class="chat-msg-time"><?= e(vpy_time_ago($m['created_at'])) ?></div>
             </div>
             <?php endforeach; ?>
         </div>
-        <form method="post" class="chat-input">
+        <form method="post" enctype="multipart/form-data" class="chat-input">
             <input type="hidden" name="csrf" value="<?= e(vpy_csrf()) ?>">
             <input type="hidden" name="user_id" value="<?= (int)$selected_user_id ?>">
-            <input type="text" name="message" placeholder="Javob yozing..." required maxlength="1000" autocomplete="off" autofocus>
+            <input type="file" name="chatfile" id="adminChatFile" accept="image/*,.pdf,.doc,.docx" style="display:none">
+            <button type="button" onclick="document.getElementById('adminChatFile').click()" style="width:38px;height:38px;border-radius:50%;background:var(--surface);border:1px solid var(--border);display:grid;place-items:center;cursor:pointer;flex-shrink:0" title="Fayl (2MB)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg></button>
+            <input type="text" name="message" placeholder="Javob yozing..." maxlength="1000" autocomplete="off" autofocus>
             <button type="submit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
         </form>
         <?php else: ?>

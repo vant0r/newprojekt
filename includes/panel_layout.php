@@ -223,6 +223,10 @@ function vpy_panel_sidebar($current, $is_admin = false) {
         $unread = vpy_notify_unread_count($u['id']);
         if ($unread > 0) echo '<a href="/user/" class="s-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>Bildirishnomalar<span class="badge">' . $unread . '</span></a>';
     }
+    if (!$is_admin) {
+        $unread = vpy_notify_unread_count($u['id']);
+        echo '<a href="/user/bildirishnomalar.php" class="s-link ' . ($current === 'bildirishnomalar' ? 'active' : '') . '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg><span>Bildirishnomalar</span>' . ($unread ? '<span class="badge">' . $unread . '</span>' : '') . '</a>';
+    }
     echo '<div class="s-foot"><button class="theme-toggle-s" id="themeToggleS" aria-label="Tema"></button>';
     echo '<a href="/" class="s-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>' . e(t('nav_home')) . '</a>';
     echo '</div></aside>';
