@@ -26,7 +26,7 @@ if (vpy_is_post() && vpy_csrf_check(vpy_post('csrf'))) {
             } else {
                 // Parse correct answers
                 $correct_list = array_map('trim', explode(',', $togri_javoblar));
-                $variant_map = ['F1'=>'A','F2'=>'B','F3'=>'C','F4'=>'D','F5'=>'E'];
+                        $variant_map = ['F1'=>'A','F2'=>'B','F3'=>'C','F4'=>'D','F5'=>'E'];
 
                 $pdo->beginTransaction();
                 try {
@@ -42,22 +42,18 @@ if (vpy_is_post() && vpy_csrf_check(vpy_post('csrf'))) {
 
                         if (!$savol) continue;
 
-                        // Map F1,F2,F3,F4,F5 → A,B,C,D (max 4 for DB)
+                        // Map F1,F2,F3,F4,F5 → A,B,C,D,E
                         $va = $variants_lot['F1'] ?? '';
                         $vb = $variants_lot['F2'] ?? '';
                         $vc = $variants_lot['F3'] ?? null;
                         $vd = $variants_lot['F4'] ?? null;
+                        $ve = $variants_lot['F5'] ?? null;
 
                         $va_c = $variants_cyr['F1'] ?? '';
                         $vb_c = $variants_cyr['F2'] ?? '';
                         $vc_c = $variants_cyr['F3'] ?? null;
                         $vd_c = $variants_cyr['F4'] ?? null;
-
-                        // If 5+ variants, merge last ones into D
-                        if (!empty($variants_lot['F5'])) {
-                            $vd = ($vd ? $vd . ' / ' : '') . $variants_lot['F5'];
-                            $vd_c = ($vd_c ? $vd_c . ' / ' : '') . ($variants_cyr['F5'] ?? '');
-                        }
+                        $ve_c = $variants_cyr['F5'] ?? null;
 
                         // Correct answer
                         $correct_raw = $correct_list[$idx] ?? '';
@@ -68,7 +64,7 @@ if (vpy_is_post() && vpy_csrf_check(vpy_post('csrf'))) {
                             $togri = strtoupper($correct_raw);
                         }
 
-                        $st = $pdo->prepare("INSERT INTO test_savollar (bilet_id, tartib, mavzu, qiyinlik, savol, savol_cyrl, variant_a, variant_b, variant_c, variant_d, variant_a_cyrl, variant_b_cyrl, variant_c_cyrl, variant_d_cyrl, togri, holat) VALUES (:bilet_id, :tartib, :mavzu, :qiyinlik, :savol, :savol_cyrl, :va, :vb, :vc, :vd, :va_c, :vb_c, :vc_c, :vd_c, :togri, 'faol')");
+                        $st = $pdo->prepare("INSERT INTO test_savollar (bilet_id, tartib, mavzu, qiyinlik, savol, savol_cyrl, variant_a, variant_b, variant_c, variant_d, variant_e, variant_a_cyrl, variant_b_cyrl, variant_c_cyrl, variant_d_cyrl, variant_e_cyrl, togri, holat) VALUES (:bilet_id, :tartib, :mavzu, :qiyinlik, :savol, :savol_cyrl, :va, :vb, :vc, :vd, :ve, :va_c, :vb_c, :vc_c, :vd_c, :ve_c, :togri, 'faol')");
 
                         $st->execute([
                             ':bilet_id' => $bilet_id,
@@ -81,10 +77,12 @@ if (vpy_is_post() && vpy_csrf_check(vpy_post('csrf'))) {
                             ':vb' => $vb,
                             ':vc' => $vc,
                             ':vd' => $vd,
+                            ':ve' => $ve,
                             ':va_c' => $va_c,
                             ':vb_c' => $vb_c,
                             ':vc_c' => $vc_c,
                             ':vd_c' => $vd_c,
+                            ':ve_c' => $ve_c,
                             ':togri' => $togri,
                         ]);
 
