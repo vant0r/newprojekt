@@ -41,7 +41,7 @@ if (vpy_is_post() && vpy_csrf_check(vpy_post('csrf'))) {
     }
 
     // Handle checkboxes (active toggles)
-    $toggle_fields = ['founder_active','developer_active','payment_humo_active','payment_uzcard_active','payment_visa_active'];
+    $toggle_fields = ['founder_active','developer_active','payment_click_active','payment_payme_active','payment_humo_active','payment_uzcard_active','payment_visa_active','payment_invoice_active'];
     foreach ($toggle_fields as $tf) {
         $v = isset($_POST[$tf]) ? '1' : '0';
         if (isset($by_key[$tf])) {
@@ -261,36 +261,94 @@ vpy_panel_sidebar('sozlamalar', true);
     </div>
 
 <?php elseif ($current_tab === 'payments'): ?>
+    <!-- CLICK -->
     <div class="card" style="margin-bottom:18px">
-        <div class="card-head"><h2>To'lov tizimlari</h2></div>
-        <?php
-        $pay_fields = ['click_service_id','click_merchant_id','click_secret_key','payme_merchant_id','payme_key'];
-        foreach ($pay_fields as $pf): ?>
-        <div class="field">
-            <label><?= e(ucfirst(str_replace('_', ' ', $pf))) ?></label>
-            <input type="<?= strpos($pf, 'secret') !== false || strpos($pf, 'key') !== false ? 'password' : 'text' ?>" name="<?= e($pf) ?>" value="<?= e($grouped['payments'][$pf] ?? '') ?>" autocomplete="off">
+        <div class="card-head"><h2>Click</h2></div>
+        <div class="toggle-row">
+            <label>Click to'lovni faollashtirish</label>
+            <div class="toggle-switch <?= ($grouped['payments']['payment_click_active'] ?? '0') === '1' ? 'on' : '' ?>" data-field="payment_click_active"></div>
+            <input type="hidden" name="payment_click_active" id="toggle_payment_click_active" value="<?= e($grouped['payments']['payment_click_active'] ?? '0') ?>">
         </div>
-        <?php endforeach; ?>
+        <div class="field-row" style="margin-top:14px">
+            <div class="field"><label>Service ID</label><input type="text" name="click_service_id" value="<?= e($grouped['payments']['click_service_id'] ?? '') ?>"></div>
+            <div class="field"><label>Merchant ID</label><input type="text" name="click_merchant_id" value="<?= e($grouped['payments']['click_merchant_id'] ?? '') ?>"></div>
+        </div>
+        <div class="field"><label>Secret Key</label><input type="password" name="click_secret_key" value="<?= e($grouped['payments']['click_secret_key'] ?? '') ?>" autocomplete="off"></div>
     </div>
 
+    <!-- PAYME -->
     <div class="card" style="margin-bottom:18px">
-        <div class="card-head"><h2>Karta orqali to'lov</h2></div>
-        <p style="font-size:0.85rem;color:var(--muted);margin-bottom:14px">Faollashtirmagan to'lov usullari foydalanuvchilarga ko'rsatilmaydi</p>
+        <div class="card-head"><h2>Payme</h2></div>
         <div class="toggle-row">
-            <label>Humo</label>
+            <label>Payme to'lovni faollashtirish</label>
+            <div class="toggle-switch <?= ($grouped['payments']['payment_payme_active'] ?? '0') === '1' ? 'on' : '' ?>" data-field="payment_payme_active"></div>
+            <input type="hidden" name="payment_payme_active" id="toggle_payment_payme_active" value="<?= e($grouped['payments']['payment_payme_active'] ?? '0') ?>">
+        </div>
+        <div class="field-row" style="margin-top:14px">
+            <div class="field"><label>Merchant ID</label><input type="text" name="payme_merchant_id" value="<?= e($grouped['payments']['payme_merchant_id'] ?? '') ?>"></div>
+            <div class="field"><label>Key</label><input type="password" name="payme_key" value="<?= e($grouped['payments']['payme_key'] ?? '') ?>" autocomplete="off"></div>
+        </div>
+    </div>
+
+    <!-- HUMO -->
+    <div class="card" style="margin-bottom:18px">
+        <div class="card-head"><h2>Humo karta</h2></div>
+        <div class="toggle-row">
+            <label>Humo orqali to'lovni faollashtirish</label>
             <div class="toggle-switch <?= ($grouped['payments']['payment_humo_active'] ?? '0') === '1' ? 'on' : '' ?>" data-field="payment_humo_active"></div>
             <input type="hidden" name="payment_humo_active" id="toggle_payment_humo_active" value="<?= e($grouped['payments']['payment_humo_active'] ?? '0') ?>">
         </div>
+        <div class="field-row" style="margin-top:14px">
+            <div class="field"><label>Karta raqami</label><input type="text" name="humo_card_number" value="<?= e($grouped['payments']['humo_card_number'] ?? '') ?>" placeholder="9860 XXXX XXXX XXXX" maxlength="19"></div>
+            <div class="field"><label>Karta egasi ismi</label><input type="text" name="humo_card_name" value="<?= e($grouped['payments']['humo_card_name'] ?? '') ?>" placeholder="FAMILIYA ISM"></div>
+        </div>
+    </div>
+
+    <!-- UZCARD -->
+    <div class="card" style="margin-bottom:18px">
+        <div class="card-head"><h2>Uzcard karta</h2></div>
         <div class="toggle-row">
-            <label>Uzcard</label>
+            <label>Uzcard orqali to'lovni faollashtirish</label>
             <div class="toggle-switch <?= ($grouped['payments']['payment_uzcard_active'] ?? '0') === '1' ? 'on' : '' ?>" data-field="payment_uzcard_active"></div>
             <input type="hidden" name="payment_uzcard_active" id="toggle_payment_uzcard_active" value="<?= e($grouped['payments']['payment_uzcard_active'] ?? '0') ?>">
         </div>
+        <div class="field-row" style="margin-top:14px">
+            <div class="field"><label>Karta raqami</label><input type="text" name="uzcard_card_number" value="<?= e($grouped['payments']['uzcard_card_number'] ?? '') ?>" placeholder="8600 XXXX XXXX XXXX" maxlength="19"></div>
+            <div class="field"><label>Karta egasi ismi</label><input type="text" name="uzcard_card_name" value="<?= e($grouped['payments']['uzcard_card_name'] ?? '') ?>" placeholder="FAMILIYA ISM"></div>
+        </div>
+    </div>
+
+    <!-- VISA -->
+    <div class="card" style="margin-bottom:18px">
+        <div class="card-head"><h2>Visa karta</h2></div>
         <div class="toggle-row">
-            <label>Visa</label>
+            <label>Visa orqali to'lovni faollashtirish</label>
             <div class="toggle-switch <?= ($grouped['payments']['payment_visa_active'] ?? '0') === '1' ? 'on' : '' ?>" data-field="payment_visa_active"></div>
             <input type="hidden" name="payment_visa_active" id="toggle_payment_visa_active" value="<?= e($grouped['payments']['payment_visa_active'] ?? '0') ?>">
         </div>
+        <div class="field-row" style="margin-top:14px">
+            <div class="field"><label>Karta raqami</label><input type="text" name="visa_card_number" value="<?= e($grouped['payments']['visa_card_number'] ?? '') ?>" placeholder="4XXX XXXX XXXX XXXX" maxlength="19"></div>
+            <div class="field"><label>Karta egasi ismi</label><input type="text" name="visa_card_name" value="<?= e($grouped['payments']['visa_card_name'] ?? '') ?>" placeholder="FAMILIYA ISM"></div>
+        </div>
+    </div>
+
+    <!-- KOMPANIYA HISOBI -->
+    <div class="card" style="margin-bottom:18px">
+        <div class="card-head"><h2>Kompaniya hisob raqami (pul o'tkazish)</h2></div>
+        <div class="toggle-row">
+            <label>Hisob raqamiga o'tkazishni faollashtirish</label>
+            <div class="toggle-switch <?= ($grouped['payments']['payment_invoice_active'] ?? '0') === '1' ? 'on' : '' ?>" data-field="payment_invoice_active"></div>
+            <input type="hidden" name="payment_invoice_active" id="toggle_payment_invoice_active" value="<?= e($grouped['payments']['payment_invoice_active'] ?? '0') ?>">
+        </div>
+        <div class="field-row" style="margin-top:14px">
+            <div class="field"><label>Kompaniya nomi</label><input type="text" name="company_name" value="<?= e($grouped['company']['company_name'] ?? '') ?>"></div>
+            <div class="field"><label>INN</label><input type="text" name="company_inn" value="<?= e($grouped['company']['company_inn'] ?? '') ?>"></div>
+        </div>
+        <div class="field-row">
+            <div class="field"><label>Hisob raqami</label><input type="text" name="company_account" value="<?= e($grouped['company']['company_account'] ?? '') ?>"></div>
+            <div class="field"><label>Bank / MFO</label><input type="text" name="company_bank" value="<?= e($grouped['company']['company_bank'] ?? '') ?>"></div>
+        </div>
+        <div class="field"><label>MFO</label><input type="text" name="company_mfo" value="<?= e($grouped['company']['company_mfo'] ?? '') ?>"></div>
     </div>
 
 <?php else: ?>
