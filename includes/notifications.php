@@ -80,3 +80,55 @@ function vpy_notify_payment_success($user_id, $tariff_name, $amount) {
         );
     }
 }
+
+
+function vpy_notify_payment_rejected($user_id, $tariff_name, $amount, $reason = '') {
+    $title = 'To\'lov rad etildi';
+    $msg = sprintf('%s tarifi uchun to\'lovingiz rad etildi.', $tariff_name);
+    if ($reason) $msg .= ' Sabab: ' . $reason;
+    vpy_notify_user($user_id, $title, $msg, 'error', '/user/tariflar.php');
+}
+
+function vpy_notify_payment_reviewing($user_id, $tariff_name) {
+    $title = 'To\'lov qabul qilindi';
+    $msg = sprintf('%s tarifi uchun to\'lov screenshotingiz qabul qilindi. Admin tekshirmoqda.', $tariff_name);
+    vpy_notify_user($user_id, $title, $msg, 'info', '/user/tariflar.php');
+}
+
+function vpy_notify_tariff_activated($user_id, $tariff_name, $expires_at) {
+    $title = 'Tarif faollashtirildi!';
+    $msg = sprintf('%s tarifi faollashtirildi. %s gacha amal qiladi. Testlarni boshlashingiz mumkin!', $tariff_name, vpy_date($expires_at, 'd.m.Y'));
+    vpy_notify_user($user_id, $title, $msg, 'success', '/user/testlar.php');
+}
+
+function vpy_notify_free_ticket_approved($user_id, $ticket_name) {
+    $title = 'Bepul bilet tasdiqlandi';
+    $msg = sprintf('%s bileti sizga bepul ochildi. Testni boshlang!', $ticket_name);
+    vpy_notify_user($user_id, $title, $msg, 'success', '/user/testlar.php');
+}
+
+// Support chat message
+function vpy_support_send($user_id, $message, $is_admin = false) {
+    $chats = vpy_read_json('support_chat', []);
+    $chats[] = [
+        'id' => count($chats) + 1,
+        'user_id' => (int)$user_id,
+        'message' => $message,
+        'is_admin' => $is_admin,
+        'created_at' => date('Y-m-d H:i:s')
+    ];
+    vpy_write_json('support_chat', $chats);
+
+    // Notify
+    if ($is_admin) {
+        vpy_notify_user($user_id, 'Qo\'llab-quvatlash javobi', 'Admin sizga javob yozdi', 'info', '/user/index.php#support');
+    } else {
+        $u = vpy_find('users', 'id', $user_id);
+        vpy_notify_admin('Yangi qo\'llab-quvatlash xabari', ($u['name'] ?? 'Foydalanuvchi') . ': ' . mb_substr($message, 0, 80, 'UTF-8'));
+    }
+    return true;
+}
+
+function vpy_support_messages($user_id) {
+    return array_values(array_filter(vpy_read_json('support_chat', []), fn($m) => (int)$m['user_id'] === (int)$user_id));
+}

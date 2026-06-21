@@ -10,19 +10,45 @@ if (vpy_is_post() && vpy_csrf_check(vpy_post('csrf'))) {
 
     if ($payment && $action === 'approve' && !in_array($payment['status'] ?? '', ['success'])) {
         $tariff = vpy_find('tariflar', 'id', $payment['tariff_id']);
+        $comment = trim(vpy_post('comment', ''));
         $payment['status'] = 'success';
         $payment['paid_at'] = date('Y-m-d H:i:s');
         $payment['expires_at'] = date('Y-m-d H:i:s', strtotime('+' . (int)($tariff['duration_days'] ?? 30) . ' days'));
         if (empty($payment['transaction_id'])) $payment['transaction_id'] = 'MANUAL-' . strtoupper(vpy_random_string(6));
+        if ($comment) $payment['admin_comment'] = $comment;
+        $payment['approved_by'] = vpy_user()['id'];
+        $payment['approved_at'] = date('Y-m-d H:i:s');
         vpy_upsert('tolovlar', $payment);
+
+        // Notifications
         vpy_notify_payment_success($payment['user_id'], $payment['tariff_name'], $payment['amount']);
-        vpy_log('payment_approved', 'To\'lov tasdiqlandi', ['id' => $id, 'admin' => vpy_user()['id']]);
-        vpy_flash_set('success', 'To\'lov tasdiqlandi! Foydalanuvchiga tarif faollashtirildi.');
+        vpy_notify_tariff_activated($payment['user_id'], $payment['tariff_name'], $payment['expires_at']);
+
+        // Support chat notification
+        $msg = 'Sizning ' . $payment['tariff_name'] . ' tarifi uchun to\'lovingiz tasdiqlandi! Tarif ' . vpy_date($payment['expires_at'], 'd.m.Y') . ' gacha amal qiladi.';
+        if ($comment) $msg .= ' Izoh: ' . $comment;
+        vpy_support_send($payment['user_id'], $msg, true);
+
+        vpy_log('payment_approved', 'To\'lov tasdiqlandi', ['id' => $id, 'admin' => vpy_user()['id'], 'comment' => $comment]);
+        vpy_flash_set('success', 'To\'lov tasdiqlandi! Foydalanuvchiga tarif faollashtirildi va bildirishnoma yuborildi.');
     } elseif ($payment && $action === 'reject') {
+        $comment = trim(vpy_post('comment', ''));
         $payment['status'] = 'failed';
+        if ($comment) $payment['admin_comment'] = $comment;
+        $payment['rejected_by'] = vpy_user()['id'];
+        $payment['rejected_at'] = date('Y-m-d H:i:s');
         vpy_upsert('tolovlar', $payment);
-        vpy_log('payment_rejected', 'To\'lov rad etildi', ['id' => $id, 'admin' => vpy_user()['id']]);
-        vpy_flash_set('success', 'To\'lov rad etildi.');
+
+        // Notifications
+        vpy_notify_payment_rejected($payment['user_id'], $payment['tariff_name'], $payment['amount'], $comment);
+
+        // Support chat
+        $msg = 'Sizning ' . $payment['tariff_name'] . ' tarifi uchun to\'lovingiz rad etildi.';
+        if ($comment) $msg .= ' Sabab: ' . $comment;
+        vpy_support_send($payment['user_id'], $msg, true);
+
+        vpy_log('payment_rejected', 'To\'lov rad etildi', ['id' => $id, 'admin' => vpy_user()['id'], 'comment' => $comment]);
+        vpy_flash_set('success', 'To\'lov rad etildi. Foydalanuvchiga bildirishnoma yuborildi.');
     } elseif ($action === 'delete' && $payment) {
         vpy_delete('tolovlar', 'id', $id);
         vpy_flash_set('success', t('msg_deleted'));
@@ -144,12 +170,14 @@ vpy_panel_sidebar('tolovlar', true);
                             <input type="hidden" name="csrf" value="<?= e(vpy_csrf()) ?>">
                             <input type="hidden" name="action" value="approve">
                             <input type="hidden" name="id" value="<?= (int)$p['id'] ?>">
+                            <input type="hidden" name="comment" value="">
                             <button type="submit" title="Tasdiqlash" style="background:rgba(20,86,168,0.1);color:var(--primary)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg></button>
                         </form>
-                        <form method="post" style="display:inline" onsubmit="return confirm('Rad etilsinmi?')">
+                        <form method="post" style="display:inline" class="reject-form">
                             <input type="hidden" name="csrf" value="<?= e(vpy_csrf()) ?>">
                             <input type="hidden" name="action" value="reject">
                             <input type="hidden" name="id" value="<?= (int)$p['id'] ?>">
+                            <input type="hidden" name="comment" class="reject-comment" value="">
                             <button type="submit" class="danger" title="Rad etish"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
                         </form>
                         <?php endif; ?>
@@ -188,6 +216,16 @@ function showSS(src){
     document.getElementById('ssModalImg').src = src;
     document.getElementById('ssModal').classList.add('show');
 }
+// Reject with comment prompt
+document.querySelectorAll('.reject-form').forEach(function(form){
+    form.addEventListener('submit', function(e){
+        e.preventDefault();
+        var reason = prompt('Rad etish sababi (ixtiyoriy):');
+        if (reason === null) return; // cancelled
+        form.querySelector('.reject-comment').value = reason;
+        form.submit();
+    });
+});
 </script>
 
 </main>

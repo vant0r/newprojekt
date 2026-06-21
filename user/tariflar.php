@@ -59,6 +59,12 @@ if (vpy_is_post() && vpy_csrf_check(vpy_post('csrf'))) {
         vpy_upsert('tolovlar', $payment);
         vpy_log('payment_init', sprintf('To\'lov: %s — %s', $tariff['name'], $method), ['user_id' => $u['id'], 'payment_id' => $payment['id']]);
 
+        // Notify user that screenshot received
+        if (in_array($method, ['humo','uzcard','visa']) && !empty($payment['screenshot'])) {
+            vpy_notify_payment_reviewing($u['id'], $tariff['name']);
+            vpy_notify_admin('Yangi to\'lov screenshot', $u['name'] . ' — ' . $tariff['name'] . ' — ' . vpy_money($tariff['price']));
+        }
+
         if ($method === 'click') {
             vpy_redirect('/includes/payments/click.php?id=' . $payment['id']);
         } elseif ($method === 'payme') {
