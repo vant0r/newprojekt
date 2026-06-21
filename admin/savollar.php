@@ -46,7 +46,7 @@ vpy_panel_sidebar('savollar', true);
 ?>
 <main class="main">
 <?php vpy_panel_topbar(t('admin_questions'), $total . ' / ' . vpy_test_count(),
-    '<a href="/admin/savollar-form.php" class="btn btn-primary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>' . e(t('admin_add')) . '</a>'
+    '<a href="/admin/savollar-import.php" class="btn btn-ghost"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>JSON import</a> <a href="/admin/savollar-form.php" class="btn btn-primary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>' . e(t('admin_add')) . '</a>'
 ); ?>
 
 <?php if (!$pdo): ?>
