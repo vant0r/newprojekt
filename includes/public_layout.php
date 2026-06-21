@@ -39,13 +39,13 @@ CSS;
 
 function vpy_public_css2() {
     return <<<CSS
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;overflow-x:hidden}
 body{font-family:var(--sans);font-weight:500;font-size:clamp(15px,1vw,16px);line-height:1.65;color:var(--dark);background:var(--bg);overflow-x:hidden;min-height:100vh;position:relative;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;transition:background var(--t),color var(--t)}
 img,svg{max-width:100%;display:block;height:auto}
-a{color:inherit;text-decoration:none;transition:var(--t)}
-button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
-button:focus,a:focus,input:focus,select:focus,textarea:focus{outline:none}
+a{color:inherit;text-decoration:none;transition:var(--t);-webkit-tap-highlight-color:transparent}
+button{font:inherit;cursor:pointer;border:none;background:none;color:inherit;-webkit-tap-highlight-color:transparent}
+*:focus,*:active{outline:none;-webkit-tap-highlight-color:transparent}
 *:focus-visible{outline:2px solid var(--primary);outline-offset:2px;border-radius:4px}
 *::-moz-focus-inner{border:0}
 ul{list-style:none}

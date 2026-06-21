@@ -30,14 +30,14 @@ function vpy_panel_css() {
     --border:rgba(255,255,255,0.07);--border-strong:rgba(255,255,255,0.13);
     --shadow-sm:0 2px 8px rgba(0,0,0,0.30);--shadow:0 8px 32px rgba(0,0,0,0.40);
 }
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
-body{font-family:var(--sans);font-size:15px;line-height:1.55;color:var(--dark);background:var(--bg);min-height:100vh;-webkit-font-smoothing:antialiased;overflow-x:hidden;transition:background var(--t),color var(--t)}
+body{font-family:var(--sans);font-size:15px;line-height:1.55;color:var(--dark);background:var(--bg);min-height:100vh;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;overflow-x:hidden;transition:background var(--t),color var(--t)}
 body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background:var(--panel-bg-img);background-size:cover;background-position:center;opacity:0.12}
 img,svg{max-width:100%;display:block;height:auto}
-a{color:inherit;text-decoration:none;transition:var(--t)}
-button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
-button:focus,a:focus,input:focus,select:focus,textarea:focus{outline:none}
+a{color:inherit;text-decoration:none;transition:var(--t);-webkit-tap-highlight-color:transparent}
+button{font:inherit;cursor:pointer;border:none;background:none;color:inherit;-webkit-tap-highlight-color:transparent}
+*:focus,*:active{outline:none;-webkit-tap-highlight-color:transparent}
 *:focus-visible{outline:2px solid var(--primary);outline-offset:2px;border-radius:4px}
 *::-moz-focus-inner{border:0}
 ul{list-style:none}
@@ -135,11 +135,11 @@ table.tbl tbody tr:last-child td{border-bottom:none}
 .theme-toggle-s::after{content:"";position:absolute;top:2px;left:2px;width:12px;height:12px;border-radius:50%;background:var(--primary);transition:transform var(--t)}
 [data-theme="dark"] .theme-toggle-s::after{transform:translateX(16px);background:#fff}
 [data-theme="dark"] .theme-toggle-s{background:var(--primary-dark)}
-.burger-mobile{display:none;width:44px;height:44px;border-radius:12px;background:var(--glass-strong);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:2px solid var(--border-strong);place-items:center;cursor:pointer;box-shadow:var(--shadow-sm)}
+.burger-mobile{display:none;width:44px;height:44px;border-radius:12px;background:var(--glass-strong);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:2px solid var(--border-strong);align-items:center;justify-content:center;cursor:pointer;box-shadow:var(--shadow-sm);flex-shrink:0}
 .burger-mobile span{display:block;width:20px;height:2.5px;background:var(--dark);position:relative;border-radius:2px}
 .burger-mobile span::before,.burger-mobile span::after{content:"";position:absolute;left:0;width:20px;height:2.5px;background:var(--dark);border-radius:2px;transition:var(--t)}
 .burger-mobile span::before{top:-7px}.burger-mobile span::after{top:7px}
-@media (max-width:1024px){.layout{grid-template-columns:1fr}.sidebar{position:fixed;top:0;left:-100%;width:260px;transition:left 0.4s cubic-bezier(0.4,0,0.2,1);box-shadow:10px 0 40px rgba(0,0,0,0.12)}.sidebar.open{left:0}.burger-mobile{display:grid}.main{padding:18px}.field-row{grid-template-columns:1fr}}
+@media (max-width:1024px){.layout{grid-template-columns:1fr}.sidebar{position:fixed;top:0;left:-100%;width:260px;height:100vh;transition:left 0.4s cubic-bezier(0.4,0,0.2,1);box-shadow:10px 0 40px rgba(0,0,0,0.15);z-index:999}.sidebar.open{left:0}.burger-mobile{display:flex}.main{padding:18px}.field-row{grid-template-columns:1fr}}
 @media (max-width:640px){.main{padding:14px}.card{padding:20px;border-radius:var(--r)}.topbar{margin-bottom:18px}table.tbl{font-size:0.8rem}table.tbl thead th,table.tbl tbody td{padding:9px 10px}}
 @keyframes spin{to{transform:rotate(360deg)}}
 .spinner{width:18px;height:18px;border:2px solid var(--blue-mid);border-top-color:var(--primary);border-radius:50%;animation:spin 0.8s linear infinite}
