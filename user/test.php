@@ -6,6 +6,23 @@ $u = vpy_user();
 $type = vpy_get('type', 'quick');
 $bilet_id = (int)vpy_get('bilet', 0);
 
+// ACCESS CONTROL — tarif faol bo'lishi kerak
+$active_tariff = vpy_active_tariff_for_user($u['id']);
+$free_bilets = array_filter(array_map('intval', explode(',', vpy_setting('free_bilets', ''))));
+$has_access = !empty($active_tariff);
+
+// Bilet uchun kirish tekshiruvi
+if ($bilet_id && !$has_access && !in_array($bilet_id, $free_bilets)) {
+    vpy_flash_set('error', 'Bu biletni ochish uchun tarif sotib oling!');
+    vpy_redirect('/user/testlar.php');
+}
+
+// Tezkor test uchun kirish tekshiruvi
+if ($type === 'quick' && !$has_access) {
+    vpy_flash_set('error', 'Tezkor test uchun tarif sotib oling!');
+    vpy_redirect('/user/tariflar.php');
+}
+
 if (vpy_is_post() && vpy_post('action') === 'finish' && vpy_csrf_check(vpy_post('csrf'))) {
     $answers_json = vpy_post('answers');
     $duration = (int)vpy_post('duration');

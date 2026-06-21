@@ -33,6 +33,7 @@
     {"key": "test_question_count", "value": "20", "group": "tests"},
     {"key": "test_pass_score", "value": "18", "group": "tests"},
     {"key": "free_daily_questions", "value": "30", "group": "tests"},
+    {"key": "free_bilets", "value": "1,2", "group": "tests"},
     {"key": "referral_bonus", "value": "5000", "group": "referral"},
     {"key": "stat_users", "value": "1200", "group": "landing"},
     {"key": "stat_tests", "value": "45000", "group": "landing"},
