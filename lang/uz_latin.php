@@ -221,6 +221,7 @@ return [
     'rating_you' => 'Siz',
 
     'profile_title' => 'Profil sozlamalari',
+    'support_title' => "Qo'llab-quvatlash",
     'profile_personal' => 'Shaxsiy ma\'lumotlar',
     'profile_security' => 'Xavfsizlik',
     'profile_avatar' => 'Profil rasmi',
