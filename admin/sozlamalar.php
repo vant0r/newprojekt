@@ -3,6 +3,22 @@ require_once __DIR__ . '/../includes/panel_layout.php';
 vpy_require_admin('/login.php');
 
 if (vpy_is_post() && vpy_csrf_check(vpy_post('csrf'))) {
+    // Password change
+    if (!empty($_POST['new_password'])) {
+        $old_pwd = vpy_post('old_password');
+        $new_pwd = vpy_post('new_password');
+        $confirm = vpy_post('confirm_password');
+        if ($new_pwd !== $confirm) {
+            vpy_flash_set('error', 'Parollar mos kelmaydi');
+        } elseif (strlen($new_pwd) < 6) {
+            vpy_flash_set('error', 'Parol kamida 6 ta belgi');
+        } else {
+            $r = vpy_password_change(vpy_user()['id'], $old_pwd, $new_pwd);
+            vpy_flash_set($r['ok'] ? 'success' : 'error', $r['ok'] ? 'Parol o\'zgartirildi' : $r['error']);
+        }
+        vpy_redirect('/admin/sozlamalar.php?tab=system');
+    }
+
     $settings = vpy_read_json('sozlamalar', []);
     $by_key = [];
     foreach ($settings as $i => $s) $by_key[$s['key']] = $i;
@@ -352,6 +368,16 @@ vpy_panel_sidebar('sozlamalar', true);
     </div>
 
 <?php else: ?>
+    <?php if ($current_tab === 'system'): ?>
+    <!-- PASSWORD CHANGE -->
+    <div class="card" style="margin-bottom:18px">
+        <div class="card-head"><h2>Parolni o'zgartirish</h2></div>
+        <div class="field"><label>Joriy parol</label><input type="password" name="old_password" autocomplete="off"></div>
+        <div class="field"><label>Yangi parol</label><input type="password" name="new_password" autocomplete="off" minlength="6"></div>
+        <div class="field"><label>Yangi parolni tasdiqlang</label><input type="password" name="confirm_password" autocomplete="off" minlength="6"></div>
+    </div>
+    <?php endif; ?>
+
     <div class="card">
         <?php
         $current_settings = $grouped[$current_tab] ?? [];
