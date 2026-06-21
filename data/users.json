@@ -2,7 +2,7 @@
     {
         "id": 1,
         "name": "Admin",
-        "phone": "+998 90 000 00 00",
+        "phone": "+998900000000",
         "password": "$2y$12$WLr.h1D/EfGpk7l7vBu3kOxfir5QGbfpSoFNbApWo5jDpdSR3UbwO",
         "role": "admin",
         "status": "active",

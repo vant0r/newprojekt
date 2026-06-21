@@ -58,10 +58,10 @@ input,textarea,select{font:inherit;color:inherit}
 .s-link.active .badge{background:rgba(255,255,255,0.25)}
 .s-foot{margin-top:auto;padding-top:14px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:4px}
 .main{padding:28px 32px;min-width:0}
-.topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:26px;flex-wrap:wrap}
-.tb-title h1{font-family:var(--serif);font-weight:600;font-size:clamp(1.4rem,2.5vw,2rem);line-height:1.1;letter-spacing:-0.015em;margin-bottom:3px}
-.tb-title p{font-size:0.88rem;color:var(--muted)}
-.tb-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:26px;flex-wrap:wrap}
+.tb-title h1{font-family:var(--sans);font-weight:700;font-size:clamp(1.2rem,2.5vw,2rem);line-height:1.1;letter-spacing:-0.015em;margin-bottom:3px}
+.tb-title p{font-size:0.85rem;color:var(--muted)}
+.tb-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;flex-shrink:0}
 CSS;
 }
 
@@ -140,7 +140,7 @@ table.tbl tbody tr:last-child td{border-bottom:none}
 .burger-mobile span::before,.burger-mobile span::after{content:"";position:absolute;left:0;width:16px;height:2px;background:var(--dark);border-radius:1px;transition:var(--t)}
 .burger-mobile span::before{top:-5px}.burger-mobile span::after{top:5px}
 @media (max-width:1024px){.layout{grid-template-columns:1fr}.sidebar{position:fixed;top:0;left:-100%;width:260px;height:100vh;transition:left 0.4s cubic-bezier(0.4,0,0.2,1);box-shadow:10px 0 40px rgba(0,0,0,0.15);z-index:999}.sidebar.open{left:0}.burger-mobile{display:flex}.main{padding:18px}.field-row{grid-template-columns:1fr}}
-@media (max-width:640px){.main{padding:14px}.card{padding:20px;border-radius:var(--r)}.topbar{margin-bottom:18px}table.tbl{font-size:0.8rem}table.tbl thead th,table.tbl tbody td{padding:9px 10px}}
+@media (max-width:640px){.main{padding:14px}.card{padding:20px;border-radius:var(--r)}.topbar{margin-bottom:18px}.tb-title h1{font-size:1.1rem}.tb-title p{display:none}table.tbl{font-size:0.8rem}table.tbl thead th,table.tbl tbody td{padding:9px 10px}.user-name{display:none}}
 @keyframes spin{to{transform:rotate(360deg)}}
 .spinner{width:18px;height:18px;border:2px solid var(--blue-mid);border-top-color:var(--primary);border-radius:50%;animation:spin 0.8s linear infinite}
 CSS;
