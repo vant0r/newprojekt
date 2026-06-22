@@ -93,7 +93,7 @@ vpy_panel_sidebar('savollar', true);
         <div class="field-row">
             <div class="field">
                 <label>Bilet raqami</label>
-                <input type="number" name="bilet_id" min="1" max="40" value="<?= (int)($q['bilet_id'] ?? 1) ?>" required>
+                <input type="number" name="bilet_id" min="1" max="65" value="<?= (int)($q['bilet_id'] ?? 1) ?>" required>
             </div>
             <div class="field">
                 <label>Tartib</label>

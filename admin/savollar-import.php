@@ -139,7 +139,7 @@ vpy_panel_sidebar('savollar', true);
         <div class="field-row">
             <div class="field">
                 <label>Bilet raqami</label>
-                <input type="number" name="bilet_id" min="1" max="40" value="<?= (int)vpy_post('bilet_id', 1) ?>" required>
+                <input type="number" name="bilet_id" min="1" max="65" value="<?= (int)vpy_post('bilet_id', 1) ?>" required>
             </div>
             <div class="field">
                 <label>To'g'ri javoblar (vergul bilan: F1,F4,F2,F1,...)</label>

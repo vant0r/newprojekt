@@ -13,7 +13,7 @@ if ($pdo) {
     } catch (Exception $e) {}
 }
 
-$total_bilets = max(40, max(array_keys($bilet_data) ?: [0]));
+$total_bilets = max(65, max(array_keys($bilet_data) ?: [0]));
 
 // User natijalar
 $user_results = vpy_filter('natijalar', fn($r) => (int)$r['user_id'] === (int)$u['id'] && ($r['type'] ?? '') === 'bilet');
