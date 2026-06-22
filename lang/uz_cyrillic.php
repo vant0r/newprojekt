@@ -221,6 +221,7 @@ return [
     'rating_you' => 'Сиз',
 
     'profile_title' => 'Профиль созламалари',
+    'support_title' => 'Қўллаб-қувватлаш',
     'profile_personal' => 'Шахсий маълумотлар',
     'profile_security' => 'Хавфсизлик',
     'profile_avatar' => 'Профиль расми',

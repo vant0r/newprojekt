@@ -1,74 +1,7 @@
 [
-    {
-        "id": 1,
-        "user_id": 2,
-        "name": "Sardor Aliyev",
-        "city": "Yaypan",
-        "rating": 5,
-        "text": "Imtihondan birinchi urinishdayoq 19 ball bilan o'tdim. Aqlli takrorlash tizimi haqiqatan ham mo'jiza qiladi — xato qilgan savollarim avtomatik takrorlandi va men ularni mukammal eslab qoldim. Tavsiya qilaman.",
-        "text_cyrl": "Имтиҳондан биринчи уринишдаёқ 19 балл билан ўтдим. Ақлли такрорлаш тизими ҳақиқатан ҳам мўжиза қилади.",
-        "status": "approved",
-        "featured": true,
-        "created_at": "2026-04-22 12:00:00"
-    },
-    {
-        "id": 2,
-        "user_id": 3,
-        "name": "Madina Karimova",
-        "city": "Yaypan",
-        "rating": 5,
-        "text": "Avval boshqa platformalarni sinab ko'rgandim, lekin ularda savollar eskirgan edi. VatanParvar Yaypan da hammasi rasmiy va yangi. Reyting tizimi meni motivatsiyalantirdi.",
-        "text_cyrl": "Аввал бошқа платформаларни синаб кўргандим, лекин уларда саволлар эскирган эди. ВатанПарвар Яйпанда ҳаммаси расмий ва янги.",
-        "status": "approved",
-        "featured": true,
-        "created_at": "2026-05-08 15:30:00"
-    },
-    {
-        "id": 3,
-        "user_id": 4,
-        "name": "Bekzod Rahimov",
-        "city": "Quva",
-        "rating": 4,
-        "text": "Dizayn juda chiroyli, ishlatish oson. Telefonda ham bemalol foydalanish mumkin. Bir nechta videoni ham qo'shsangiz a'lo bo'lardi.",
-        "text_cyrl": "Дизайн жуда чиройли, ишлатиш осон. Телефонда ҳам бемалол фойдаланиш мумкин.",
-        "status": "approved",
-        "featured": true,
-        "created_at": "2026-05-25 18:45:00"
-    },
-    {
-        "id": 4,
-        "user_id": 5,
-        "name": "Diyora Tursunova",
-        "city": "Yaypan",
-        "rating": 5,
-        "text": "20 dan 20 ball oldim! Bilet bo'yicha mashq qilish va statistikani kuzatish juda foydali bo'ldi. Premium tarif arziydi.",
-        "text_cyrl": "20 дан 20 балл олдим! Билет бўйича машқ қилиш ва статистикани кузатиш жуда фойдали бўлди.",
-        "status": "approved",
-        "featured": true,
-        "created_at": "2026-06-02 09:20:00"
-    },
-    {
-        "id": 5,
-        "user_id": null,
-        "name": "Akmal Yo'ldoshev",
-        "city": "Marg'ilon",
-        "rating": 5,
-        "text": "GAI imtihonidan o'tdim. Bu yerda tayyorlangan barcha savollarning 95% imtihonda chiqdi. Mukammal platforma.",
-        "text_cyrl": "ГАИ имтиҳонидан ўтдим. Бу ерда тайёрланган барча саволларнинг 95% имтиҳонда чиқди.",
-        "status": "approved",
-        "featured": false,
-        "created_at": "2026-06-10 13:10:00"
-    },
-    {
-        "id": 6,
-        "user_id": null,
-        "name": "Nilufar Saidova",
-        "city": "Yaypan",
-        "rating": 5,
-        "text": "O'qituvchimiz tavsiya qildi va men hayron qoldim. Telegram orqali bildirishnomalar, kunlik mashqlar — hammasi joyida.",
-        "text_cyrl": "Ўқитувчимиз тавсия қилди ва мен ҳайрон қолдим. Телеграм орқали билдиришномалар, кунлик машқлар — ҳаммаси жойида.",
-        "status": "approved",
-        "featured": false,
-        "created_at": "2026-06-15 17:55:00"
-    }
+    {"id":1,"name":"Aziz Karimov","text":"Juda qulay platforma. 1 haftada tayyorlanib birinchi urinishda topshirdim!","rating":5,"status":"approved","featured":true,"city":"Yaypan","created_at":"2026-03-15 10:00:00"},
+    {"id":2,"name":"Nilufar Rahimova","text":"Savollar rasmiy GAI imtihoniga to'liq mos keladi. Tavsiya qilaman.","rating":5,"status":"approved","featured":true,"city":"Yaypan","created_at":"2026-03-10 14:30:00"},
+    {"id":3,"name":"Sardor Toshmatov","text":"Mobil versiyasi juda yaxshi. Avtobusda ham mashq qilsa bo'ladi.","rating":4,"status":"approved","featured":true,"city":"Farg'ona","created_at":"2026-02-20 09:15:00"},
+    {"id":4,"name":"Madina Usmonova","text":"Tushuntirishlar bilan javob beriladi. Bu juda foydali.","rating":5,"status":"approved","featured":true,"city":"Yaypan","created_at":"2026-02-05 16:45:00"},
+    {"id":5,"name":"Bobur Aliyev","text":"Narxi arzon, sifati yuqori. 3 kunlik tarifdan boshladim, keyin 30 kunga o'tdim.","rating":5,"status":"approved","featured":true,"city":"Qo'qon","created_at":"2026-01-28 11:20:00"}
 ]

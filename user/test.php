@@ -6,6 +6,23 @@ $u = vpy_user();
 $type = vpy_get('type', 'quick');
 $bilet_id = (int)vpy_get('bilet', 0);
 
+// ACCESS CONTROL — tarif faol bo'lishi kerak
+$active_tariff = vpy_active_tariff_for_user($u['id']);
+$free_bilets = array_filter(array_map('intval', explode(',', vpy_setting('free_bilets', ''))));
+$has_access = !empty($active_tariff);
+
+// Bilet uchun kirish tekshiruvi
+if ($bilet_id && !$has_access && !in_array($bilet_id, $free_bilets)) {
+    vpy_flash_set('error', 'Bu biletni ochish uchun tarif sotib oling!');
+    vpy_redirect('/user/testlar.php');
+}
+
+// Tezkor test uchun kirish tekshiruvi
+if ($type === 'quick' && !$has_access) {
+    vpy_flash_set('error', 'Tezkor test uchun tarif sotib oling!');
+    vpy_redirect('/user/tariflar.php');
+}
+
 if (vpy_is_post() && vpy_post('action') === 'finish' && vpy_csrf_check(vpy_post('csrf'))) {
     $answers_json = vpy_post('answers');
     $duration = (int)vpy_post('duration');
@@ -88,6 +105,12 @@ vpy_panel_head($bilet_id ? sprintf('%s %02d', t('ticket_label'), $bilet_id) : t(
 .q-answer.selected{background:linear-gradient(135deg,rgba(13,107,78,0.08),rgba(232,168,56,0.06));border-color:var(--primary);box-shadow:0 6px 20px rgba(13,107,78,0.12)}
 .q-answer .letter{width:38px;height:38px;border-radius:12px;background:rgba(13,107,78,0.08);color:var(--primary);display:grid;place-items:center;font-weight:700;font-size:0.9rem;flex-shrink:0;transition:var(--t)}
 .q-answer.selected .letter{background:var(--primary);color:#fff}
+/* F1-F5 on desktop, A-E on mobile */
+.letter .lbl-a{display:none}
+.letter .lbl-f{display:block}
+@media (max-width:768px){.letter .lbl-a{display:block}.letter .lbl-f{display:none}}
+/* NO COPY — savol va variantlarni copy qilish taqiq */
+.q-text,.q-answers,.q-answer,.q-card{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}
 .q-nav{display:flex;justify-content:space-between;gap:14px;margin-top:24px}
 .q-grid{display:flex;gap:6px;flex-wrap:wrap;margin-top:14px;padding:14px;background:var(--glass);border-radius:var(--r);border:1px solid var(--border)}
 .q-grid button{width:38px;height:38px;border-radius:10px;border:1.5px solid var(--border);background:transparent;font-weight:700;font-size:0.85rem;cursor:pointer;transition:var(--t);color:var(--dark-soft)}
@@ -139,6 +162,12 @@ vpy_panel_sidebar('test', false);
                 $variants = [['A', $a], ['B', $b]];
                 if ($c !== '') $variants[] = ['C', $c];
                 if ($d !== '') $variants[] = ['D', $d];
+                // 5th variant (stored in variant_e or combined in D)
+                $e = '';
+                if (!empty($q['variant_e'])) {
+                    $e = $is_cyrl && !empty($q['variant_e_cyrl']) ? $q['variant_e_cyrl'] : $q['variant_e'];
+                }
+                if ($e !== '') $variants[] = ['E', $e];
             ?>
                 <div class="q-card" data-q-index="<?= $i ?>" data-q-id="<?= (int)$q['id'] ?>" style="<?= $i === 0 ? '' : 'display:none' ?>">
                     <div class="q-num"><?= e(t('test_question')) ?> <?= $i + 1 ?></div>
@@ -147,9 +176,9 @@ vpy_panel_sidebar('test', false);
                         <div class="q-image"><svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
                     <?php endif; ?>
                     <div class="q-answers">
-                        <?php foreach ($variants as $v): ?>
+                        <?php $fn = 0; foreach ($variants as $v): $fn++; ?>
                             <button type="button" class="q-answer" data-letter="<?= e($v[0]) ?>">
-                                <span class="letter"><?= e($v[0]) ?></span>
+                                <span class="letter"><span class="lbl-f">F<?= $fn ?></span><span class="lbl-a"><?= e($v[0]) ?></span></span>
                                 <span><?= e($v[1]) ?></span>
                             </button>
                         <?php endforeach; ?>

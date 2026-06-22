@@ -18,6 +18,23 @@ if ($id) {
 $is_edit = !empty($q);
 
 if (vpy_is_post() && vpy_csrf_check(vpy_post('csrf'))) {
+    // Handle image upload
+    $rasm_url = $q['rasm'] ?? '';
+    if (!empty($_FILES['savol_rasm']['tmp_name']) && is_uploaded_file($_FILES['savol_rasm']['tmp_name'])) {
+        $ext = strtolower(pathinfo($_FILES['savol_rasm']['name'], PATHINFO_EXTENSION));
+        if (in_array($ext, ['jpg','jpeg','png','webp','gif'])) {
+            $fname = 'savol_' . time() . '_' . mt_rand(100,999) . '.' . $ext;
+            $dest = VPY_UPLOADS . '/' . $fname;
+            if (move_uploaded_file($_FILES['savol_rasm']['tmp_name'], $dest)) {
+                $rasm_url = '/assets/uploads/' . $fname;
+            }
+        }
+    }
+    // Delete image if checkbox checked
+    if (vpy_post('rasm_ochir') === '1') {
+        $rasm_url = '';
+    }
+
     $data = [
         'bilet_id' => (int)vpy_post('bilet_id', 1),
         'tartib' => (int)vpy_post('tartib', 1),
@@ -25,6 +42,7 @@ if (vpy_is_post() && vpy_csrf_check(vpy_post('csrf'))) {
         'qiyinlik' => vpy_post('qiyinlik', 'orta'),
         'savol' => vpy_post('savol'),
         'savol_cyrl' => vpy_post('savol_cyrl'),
+        'rasm' => $rasm_url,
         'variant_a' => vpy_post('variant_a'),
         'variant_b' => vpy_post('variant_b'),
         'variant_c' => vpy_post('variant_c'),
@@ -67,7 +85,7 @@ vpy_panel_sidebar('savollar', true);
     '<a href="/admin/savollar.php" class="btn btn-ghost">' . e(t('btn_back')) . '</a>'
 ); ?>
 
-<form method="post">
+<form method="post" enctype="multipart/form-data">
     <input type="hidden" name="csrf" value="<?= e(vpy_csrf()) ?>">
 
     <div class="card">
@@ -75,7 +93,7 @@ vpy_panel_sidebar('savollar', true);
         <div class="field-row">
             <div class="field">
                 <label>Bilet raqami</label>
-                <input type="number" name="bilet_id" min="1" max="40" value="<?= (int)($q['bilet_id'] ?? 1) ?>" required>
+                <input type="number" name="bilet_id" min="1" max="65" value="<?= (int)($q['bilet_id'] ?? 1) ?>" required>
             </div>
             <div class="field">
                 <label>Tartib</label>
@@ -100,6 +118,26 @@ vpy_panel_sidebar('savollar', true);
                 </select>
             </div>
         </div>
+    </div>
+
+    <div class="card" style="margin-top:18px">
+        <div class="card-head"><h2>Savol rasmi</h2></div>
+        <p style="font-size:0.85rem;color:var(--muted);margin-bottom:14px">Agar savolda rasm ko'rsatilishi kerak bo'lsa yuklang (ixtiyoriy)</p>
+        <div class="field">
+            <label>Rasm</label>
+            <div style="position:relative;width:100%;padding:20px;border:2px dashed var(--border-strong);border-radius:14px;text-align:center;cursor:pointer;transition:var(--t);background:var(--surface)">
+                <input type="file" name="savol_rasm" accept="image/*" style="position:absolute;inset:0;opacity:0;cursor:pointer">
+                <p style="color:var(--muted);font-size:0.85rem">Rasm yuklang (JPG, PNG, WebP)</p>
+                <?php if (!empty($q['rasm'])): ?>
+                <img src="<?= e($q['rasm']) ?>" alt="" style="max-width:300px;max-height:150px;margin:10px auto 0;border-radius:8px;object-fit:contain">
+                <?php endif; ?>
+            </div>
+        </div>
+        <?php if (!empty($q['rasm'])): ?>
+        <label style="display:flex;align-items:center;gap:8px;margin-top:8px;font-size:0.85rem;color:var(--muted);cursor:pointer">
+            <input type="checkbox" name="rasm_ochir" value="1"> Rasmni o'chirish
+        </label>
+        <?php endif; ?>
     </div>
 
     <div class="card" style="margin-top:18px">
